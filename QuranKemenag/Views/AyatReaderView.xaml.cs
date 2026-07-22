@@ -16,6 +16,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
+
 namespace QuranKemenag.Views
 {
     public sealed partial class AyatReaderView : UserControl
@@ -278,6 +279,28 @@ namespace QuranKemenag.Views
         {
             if (!await AdaAyatUntukEksporAsync()) return;
 
+            // Word sedang terbuka -> sisipkan langsung ke posisi kursor di dokumen aktif
+            if (WordInteropService.WordSedangTerbuka())
+            {
+                try
+                {
+                    WordInteropService.SisipkanKeDokumenAktif(
+                        judulSurah: JudulSurahUntukEkspor(),
+                        daftarAyat: _ayatSaatIni,
+                        tampilkanAyat: ChkAyat.IsChecked == true,
+                        tampilkanLatin: ChkLatin.IsChecked == true,
+                        tampilkanTerjemah: ChkTerjemah.IsChecked == true,
+                        ukuranFontArab: _fontSize
+                    );
+                }
+                catch (Exception ex)
+                {
+                    await TampilkanDialogAsync("Ekspor Word", $"Gagal menyisipkan ke Word:\n{ex.Message}");
+                }
+                return;
+            }
+
+            // Word tidak terbuka -> proses seperti biasa (buat file .docx baru)
             var picker = new FileSavePicker();
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow));
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;

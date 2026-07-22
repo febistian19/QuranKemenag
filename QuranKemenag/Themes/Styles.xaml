@@ -10,6 +10,43 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="#17603B" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="#124A2E" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="#A9C9BB" />
+                                        <Setter Target="Isi.Foreground" Value="White" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="Isi" Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- ===================== KARTU (surah, juz, bookmark) ===================== -->
@@ -29,6 +66,37 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FontSize" Value="12.5" />
         <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="#E0E3E5" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="#D2D6D9" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="Isi" Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Badge nomor ayat (lingkaran emas) -->

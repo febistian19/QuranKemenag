@@ -5,8 +5,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using QuranKemenag.Models;
 
-// Alias eksplisit: nama tipe ini sama dengan tipe UI WinUI (Microsoft.UI.Xaml.Documents.*),
-// jadi harus ditunjuk persis dari DocumentFormat supaya compiler tidak bingung.
 using WordDocument = DocumentFormat.OpenXml.Wordprocessing.Document;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
@@ -15,14 +13,9 @@ using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace QuranKemenag.Services
 {
-    /// <summary>
-    /// Kumpulan fungsi untuk mengekspor ayat Al-Qur'an (Arab, Latin, Terjemah)
-    /// ke dalam berkas Microsoft Word (.docx) menggunakan Open XML SDK resmi Microsoft.
-    /// Tidak butuh Microsoft Word terpasang di komputer pengguna.
-    /// </summary>
     public static class WordExportService
     {
-        private const string FontArab = "Traditional Arabic";
+        private const string FontArab = "LPMQ Isep Misbah";
         private const string FontLatin = "Segoe UI";
         private const string WarnaHijau = "1E7145";
         private const string WarnaEmas = "C9A227";
@@ -43,11 +36,9 @@ namespace QuranKemenag.Services
             mainPart.Document = new Document();
             var body = new Body();
 
-            // ===== Judul dokumen =====
             body.Append(BuatParagrafJudul(judulSurah));
             body.Append(BuatParagrafKosong());
 
-            // ===== Isi per ayat =====
             foreach (var ayat in daftarAyat)
             {
                 if (tampilkanAyat)
@@ -65,10 +56,8 @@ namespace QuranKemenag.Services
                 body.Append(BuatParagrafKosong());
             }
 
-            // ===== Footer sumber =====
             body.Append(BuatParagrafFooter());
 
-            // Ukuran halaman A4 + margin standar
             body.Append(new SectionProperties(
                 new PageSize { Width = 11906U, Height = 16838U },
                 new PageMargin { Top = 1134, Bottom = 1134, Left = 1134, Right = 1134 }
@@ -96,13 +85,12 @@ namespace QuranKemenag.Services
 
         private static Paragraph BuatParagrafArab(Ayat ayat, int ukuranFont)
         {
-            // ukuranFont dalam "pt" tampilan aplikasi, dikonversi ke half-point (unit Word)
             string szHalfPoint = (ukuranFont * 2).ToString();
 
             return new Paragraph(
                 new ParagraphProperties(
                     new Justification { Val = JustificationValues.Right },
-                    new BiDi() // paragraf mode kanan-ke-kiri
+                    new BiDi()
                 ),
                 new Run(
                     new RunProperties(

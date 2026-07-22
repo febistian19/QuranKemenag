@@ -21,20 +21,50 @@
         <Border Grid.Column="0" Background="{StaticResource SidebarBrush}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="64" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Logo & judul aplikasi -->
-                <Border Grid.Row="0" Padding="22,26,22,22" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/Images/logo-kemenag.png" Width="44" Height="44" Stretch="Uniform" />
-                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="Qur'an Kemenag" FontWeight="Bold" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" />
-                            <TextBlock Text="Versi Dekstop" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,1,0,0" />
+                <Border Grid.Row="0"
+                Height="64"
+                Background="White"
+                BorderBrush="{StaticResource BorderBrush2}"
+                BorderThickness="0,0,0,1"
+                Padding="16,0">
+
+                    <Grid VerticalAlignment="Center">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0"
+                            Source="/Resources/Images/logo-kemenag.png"
+                            Width="40"
+                            Height="40"
+                            Stretch="Uniform"
+                            VerticalAlignment="Center"/>
+
+                        <StackPanel Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center">
+
+                            <TextBlock Text="Qur'an Kemenag"
+                                FontSize="15"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                            <TextBlock Text="Versi Desktop"
+                                FontSize="11"
+                                Foreground="{StaticResource TextSecondaryBrush}"/>
+
                         </StackPanel>
-                    </StackPanel>
+
+                    </Grid>
+
                 </Border>
 
                 <!-- Menu navigasi -->

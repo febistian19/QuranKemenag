@@ -20,24 +20,41 @@
 
             <!-- Toolbar pilih surah & rentang ayat -->
             <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="24,16">
-                <Grid>
+                <ScrollViewer
+                    
+                    HorizontalScrollMode="Enabled"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollMode="Disabled"
+                    VerticalScrollBarVisibility="Hidden"
+                    Padding="0,0,0,14">
+
+                   
+                        <Grid MinWidth="950">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Back -->
+                        <ColumnDefinition Width="450"/>
+                        <!-- Surah -->
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Dari -->
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- s/d -->
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Sampai -->
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Tombol -->
+                        <ColumnDefinition Width="*"/>
+                        <!-- Sisa ruang kosong -->
                     </Grid.ColumnDefinitions>
 
                     <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Padding="10,8" Margin="0,0,16,0" Click="Kembali_Click">
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" />
                     </Button>
 
-                    <ComboBox Grid.Column="1" x:Name="CmbSurah" Width="350" Height="40" Padding="12,0" DisplayMemberPath="DisplayJudul" SelectedValuePath="Nomor"
-                  SelectionChanged="CmbSurah_SelectionChanged" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
-                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}">
+                    <ComboBox Grid.Column="1" x:Name="CmbSurah"  Width="450" MinWidth="220" MaxWidth="450" Height="40" Padding="12,0" 
+                              DisplayMemberPath="DisplayJudul" SelectedValuePath="Nomor"
+                              SelectionChanged="CmbSurah_SelectionChanged" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                              Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}">
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="ComboBoxItemForeground" Color="Black" />
                             <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="Black" />
@@ -64,8 +81,11 @@
                         </ComboBox.Resources>
                     </ComboBox>
 
-                    <Button Grid.Column="5" Content="Tampilkan" Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0" Margin="14,0,0,0" Click="Tampilkan_Click" />
-                </Grid>
+                    <Button Grid.Column="5" Content="Tampilkan" Style="{StaticResource PrimaryButton}" Height="40" MinWidth="110" Margin="14,0,0,0" Click="Tampilkan_Click" />
+                
+                        
+                        </Grid>
+                </ScrollViewer>
             </Border>
 
             <!-- ===== Mode 1: Daftar ayat per kartu ===== -->
