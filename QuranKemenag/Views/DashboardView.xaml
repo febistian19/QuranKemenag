@@ -1,0 +1,63 @@
+<UserControl
+    x:Class="QuranKemenag.Views.DashboardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:QuranKemenag.Views">
+
+    <ScrollViewer Padding="24">
+        <StackPanel MaxWidth="1000" HorizontalAlignment="Left">
+
+            <!-- Banner -->
+            <Border Background="{StaticResource BannerGradientBrush}" CornerRadius="14" Padding="28" Height="180">
+                <StackPanel VerticalAlignment="Center" MaxWidth="900">
+                    <TextBlock Text="Ekspor Ayat ke Layout Profesional" Foreground="White" FontSize="18" FontWeight="Bold" />
+                    <TextBlock Text="Transformasi teks suci ke dalam tata letak profesional dengan presisi tinggi. Sesuaikan tipografi dan ekspor dengan mudah ke format Word atau PowerPoint untuk kebutuhan publikasi Anda."
+                               Foreground="#E5F5F1" TextWrapping="Wrap" Margin="0,10,0,16" />
+                    <Button Content="⬆  Mulai Ekspor Layout" Style="{StaticResource PrimaryButton}"
+                            HorizontalAlignment="Left" Click="MulaiEkspor_Click" />
+                </StackPanel>
+            </Border>
+
+            <!-- Bookmark terbaru -->
+            <Border Style="{StaticResource CardBorder}" Padding="0" Margin="0,24,0,0">
+                <StackPanel>
+                    <Border Padding="16,14" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="13" Foreground="{StaticResource GoldBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="Bookmark Terbaru" FontWeight="SemiBold" Margin="8,0,0,0" Foreground="{StaticResource TextPrimaryBrush}" />
+                        </StackPanel>
+                    </Border>
+
+                    <ItemsControl x:Name="BookmarkList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:BookmarkTampil">
+                                <Border BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="16,14"
+                                        Tapped="BookmarkItem_Tapped" Tag="{x:Bind}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="34" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="20" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Width="26" Height="26" CornerRadius="13" BorderBrush="{StaticResource GoldBrush}" BorderThickness="1.5" VerticalAlignment="Top">
+                                            <TextBlock Text="{x:Bind NomorSurah}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                            <TextBlock Text="{x:Bind NamaSurah}" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}" />
+                                            <TextBlock Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"
+                                                       Text="{x:Bind TeksAyat}" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="›" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Content="Lihat Semua Bookmark" Background="#DADDE0" BorderThickness="0"
+                            Padding="0,12" HorizontalAlignment="Stretch" Click="LihatSemuaBookmark_Click" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

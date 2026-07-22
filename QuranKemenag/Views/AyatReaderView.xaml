@@ -1,0 +1,209 @@
+<UserControl
+    x:Class="QuranKemenag.Views.AyatReaderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:QuranKemenag.Views"
+    xmlns:models="using:QuranKemenag.Models">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="270" />
+        </Grid.ColumnDefinitions>
+
+        <!-- ===== Kolom kiri: toolbar + isi ===== -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Toolbar pilih surah & rentang ayat -->
+            <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="24,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Padding="10,8" Margin="0,0,14,0" Click="Kembali_Click">
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" />
+                    </Button>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <ComboBox x:Name="CmbSurah" Width="220" Padding="10,7" DisplayMemberPath="DisplayJudul" SelectedValuePath="Nomor"
+                                  SelectionChanged="CmbSurah_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}" />
+                        <ComboBox x:Name="CmbAyatDari" Width="60" Padding="10,7" Margin="10,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}" />
+                        <TextBlock Text="s/d" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource TextSecondaryBrush}" />
+                        <ComboBox x:Name="CmbAyatSampai" Width="60" Padding="10,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}" />
+                        <Button Content="Tampilkan" Style="{StaticResource PrimaryButton}" Margin="14,0,0,0" Click="Tampilkan_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ===== Mode 1: Daftar ayat per kartu ===== -->
+            <ScrollViewer x:Name="PanelTeksArab" Grid.Row="1" Padding="24" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="AyatItemsControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:Ayat">
+                            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource NomorBadge}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <TextBlock Text="{x:Bind NomorAyat}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
+                                    </Border>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
+                                               FontFamily="Traditional Arabic" HorizontalAlignment="Right"
+                                               FlowDirection="RightToLeft" TextWrapping="Wrap" MaxWidth="520" LineHeight="46"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
+                                               Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+
+                                    <!-- Tombol bookmark -->
+                                    <Button Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="8,0,0,0"
+                                            Background="Transparent" BorderThickness="0"
+                                            Tag="{x:Bind NomorAyat}" Click="BookmarkAyat_Click">
+                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="16" Foreground="{x:Bind WarnaBookmark, Mode=OneWay}" />
+                                    </Button>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{x:Bind TeksLatin}"
+                                               FontSize="15" Foreground="{StaticResource GoldBrush}" FontStyle="Italic" Margin="0,12,0,0" TextWrapping="Wrap"
+                                               Visibility="{x:Bind local:AyatReaderView.TampilkanLatinGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+
+                                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
+                                                Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />
+                                        <TextBlock Text="{x:Bind Terjemah}" TextWrapping="Wrap" Margin="0,3,0,0" FontSize="13.5" Foreground="{StaticResource TextPrimaryBrush}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
+                                                Visibility="{x:Bind HasCatatanKaki}">
+                                        <TextBlock Text="CATATAN KAKI" FontWeight="Bold" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{x:Bind CatatanKaki}" TextWrapping="Wrap" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- ===== Mode 2: Mushaf per halaman (bingkai dekoratif) ===== -->
+            <Grid x:Name="PanelMushaf" Grid.Row="1" Visibility="Collapsed" />
+        </Grid>
+
+        <!-- ===== Kolom kanan: panel pengaturan tampilan ===== -->
+        <Border Grid.Column="1" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1,0,0,0" Padding="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="PENGATURAN TAMPILAN" FontWeight="Bold" FontSize="12" Margin="0,0,0,16" Foreground="{StaticResource TextPrimaryBrush}" />
+
+                    <!-- Checkbox mode Per Ayat -->
+                    <StackPanel x:Name="PanelCentangPerAyat">
+                        <TextBlock Text="Tampilkan" FontWeight="SemiBold" FontSize="12.5" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <CheckBox x:Name="ChkAyat" Content="Ayat" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
+                        <CheckBox x:Name="ChkTerjemah" Content="Terjemah" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
+                        <CheckBox x:Name="ChkLatin" Content="Latin" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
+                    </StackPanel>
+
+                    <!-- Checkbox mode Per Halaman (Mushaf) -->
+                    <StackPanel x:Name="PanelCentangPerHalaman" Visibility="Collapsed">
+                        <TextBlock Text="Tampilkan" FontWeight="SemiBold" FontSize="12.5" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <CheckBox Content="Nomor Ayat" IsChecked="True" Margin="0,5" IsEnabled="False" />
+                        <CheckBox Content="Tanda Waqaf" Margin="0,5" IsEnabled="False" />
+                        <CheckBox Content="Tanda Sajdah" Margin="0,5" IsEnabled="False" />
+                    </StackPanel>
+
+                    <TextBlock Text="Tampilan" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <ComboBox x:Name="CmbModeTampilan" SelectedIndex="0" SelectionChanged="CmbModeTampilan_SelectionChanged" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="Per Ayat" />
+                        <ComboBoxItem Content="Per Halaman" />
+                    </ComboBox>
+
+                    <TextBlock Text="Terjemah Bahasa" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <ComboBox SelectedIndex="0" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="ID — Indonesia" />
+                    </ComboBox>
+
+                    <!-- Ukuran font hanya relevan di mode Per Ayat -->
+                    <StackPanel x:Name="PanelUkuranFont">
+                        <TextBlock Text="Ukuran Font" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" x:Name="TxtUkuranFont" Text="26" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
+                            <Button Grid.Column="1" Content="-" Width="32" FontSize="16" Style="{StaticResource SecondaryButton}" Click="FontKurang_Click" />
+                            <Button Grid.Column="2" Content="+" Width="32" FontSize="16" Margin="6,0,0,0" Style="{StaticResource SecondaryButton}" Click="FontTambah_Click" />
+                        </Grid>
+                    </StackPanel>
+
+                    <TextBlock Text="Aksi" FontWeight="SemiBold" FontSize="12.5" Margin="0,22,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <Button HorizontalAlignment="Stretch" Margin="0,4" Style="{StaticResource SecondaryButton}" Click="SalinAyat_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8C8;" FontSize="12" Margin="0,0,8,0" />
+                            <TextBlock Text="Salin Ayat" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnSalinTerjemah" HorizontalAlignment="Stretch" Margin="0,4" Style="{StaticResource SecondaryButton}" Click="SalinDenganTerjemah_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8C8;" FontSize="12" Margin="0,0,8,0" />
+                            <TextBlock Text="Salin dengan Terjemah" />
+                        </StackPanel>
+                    </Button>
+
+                    <Border Background="{StaticResource PrimaryGreenBrush}" CornerRadius="8" Padding="0,10" Margin="0,18,0,10">
+                        <TextBlock Text="EKSPOR" Foreground="White" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" />
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorderInteractive}" Margin="0,0,0,10" Padding="12" Tapped="EksporWord_Click">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="38" Height="38" CornerRadius="6" Background="#2B579A">
+                                <TextBlock Text="W" Foreground="White" FontWeight="Bold" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="Eksport ke Word" FontWeight="SemiBold" FontSize="12.5" />
+                                <TextBlock Text="Dokumen Word (.docx)" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorderInteractive}" Margin="0,0,0,4" Padding="12" Tapped="EksporPpt_Click">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="38" Height="38" CornerRadius="6" Background="#D24726">
+                                <TextBlock Text="P" Foreground="White" FontWeight="Bold" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="Eksport ke PowerPoint" FontWeight="SemiBold" FontSize="12.5" />
+                                <TextBlock Text="Presentasi PowerPoint (.pptx)" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

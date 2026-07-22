@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "QuranKemenag (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "QuranKemenag (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

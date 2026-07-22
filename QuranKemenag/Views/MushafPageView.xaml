@@ -1,0 +1,59 @@
+<UserControl
+    x:Class="QuranKemenag.Views.MushafPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:QuranKemenag.Views">
+
+    <Grid Background="{StaticResource BackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ===== Halaman mushaf dengan bingkai gambar iluminasi ===== -->
+        <Viewbox Grid.Row="0" Stretch="Uniform" Margin="30" MaxWidth="720" MaxHeight="820">
+            <Grid Width="640" Height="800">
+
+                <!-- Layer 1: gambar bingkai iluminasi -->
+                <Image Source="/Resources/Images/iluminasi.png" Stretch="Fill" />
+
+                <!-- Layer 2: konten ayat di dalam area putih bingkai -->
+                <Grid Margin="105,215,105,90">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Banner nama surah -->
+                    <Border Grid.Row="0" Background="#FFFCEA" BorderBrush="{StaticResource GoldBrush}" BorderThickness="1.5"
+                            CornerRadius="16" Padding="20,8" HorizontalAlignment="Center" Margin="0,0,0,18">
+                        <TextBlock x:Name="TxtNamaSurahArab" FontFamily="Traditional Arabic" FontSize="22"
+                                   Foreground="{StaticResource PrimaryGreenDarkBrush}" FlowDirection="RightToLeft" />
+                    </Border>
+
+                    <!-- Isi ayat mengalir seperti mushaf -->
+                    <ScrollViewer Grid.Row="1" Padding="28,0,28,0">
+                        <TextBlock x:Name="TeksMushaf" FontFamily="Traditional Arabic" FontSize="24" LineHeight="52"
+                                   TextWrapping="Wrap" TextAlignment="Right" FlowDirection="RightToLeft" />
+                    </ScrollViewer>
+
+                    <!-- Banner penutup -->
+                    <Border Grid.Row="2" Background="#FFFCEA" BorderBrush="{StaticResource GoldBrush}" BorderThickness="1.5"
+                            CornerRadius="16" Padding="20,6" HorizontalAlignment="Center" Margin="0,18,0,0">
+                        <TextBlock x:Name="TxtInfoBawah" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                    </Border>
+                </Grid>
+            </Grid>
+        </Viewbox>
+
+        <!-- ===== Info & catatan ===== -->
+        <Border Grid.Row="1" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,1,0,0" Padding="24,10">
+            <TextBlock FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap">
+                Catatan: tata letak mushaf standar (pembagian per 15 baris resmi Kemenag) memerlukan data
+                metadata halaman/baris dari sumber resmi. Tampilan ini adalah pratinjau tata letak mushaf
+                yang bisa disesuaikan lebih lanjut setelah metadata tersebut tersedia.
+            </TextBlock>
+        </Border>
+    </Grid>
+</UserControl>
