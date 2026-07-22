@@ -32,10 +32,11 @@
                                    Foreground="{StaticResource PrimaryGreenDarkBrush}" FlowDirection="RightToLeft" />
                     </Border>
 
-                    <!-- Isi ayat mengalir seperti mushaf -->
                     <ScrollViewer Grid.Row="1" Padding="28,0,28,0">
-                        <TextBlock x:Name="TeksMushaf" FontFamily="Traditional Arabic" FontSize="24" LineHeight="52"
-                                   TextWrapping="Wrap" TextAlignment="Right" FlowDirection="RightToLeft" />
+                        <RichTextBlock x:Name="TeksMushaf" FontFamily="Traditional Arabic" FontSize="24" LineHeight="52"
+                    TextAlignment="Right" FlowDirection="RightToLeft">
+                            <Paragraph x:Name="ParagrafMushaf" />
+                        </RichTextBlock>
                     </ScrollViewer>
 
                     <!-- Banner penutup -->

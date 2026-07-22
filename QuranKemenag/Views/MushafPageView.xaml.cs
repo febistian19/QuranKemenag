@@ -20,19 +20,19 @@ namespace QuranKemenag.Views
                 ? $"{surah.NamaLatin} • Ayat {daftarAyat[0].NomorAyat}–{daftarAyat[^1].NomorAyat} dari {surah.JumlahAyat} ayat"
                 : surah.NamaLatin;
 
-            TeksMushaf.Inlines.Clear();
+            ParagrafMushaf.Inlines.Clear();
 
             foreach (var ayat in daftarAyat)
             {
                 if (ayat.NomorAyat == 0)
                 {
-                    TeksMushaf.Inlines.Add(new Run { Text = ayat.TeksArab });
+                    ParagrafMushaf.Inlines.Add(new Run { Text = ayat.TeksArab });
                     continue;
                 }
 
-                TeksMushaf.Inlines.Add(new Run { Text = ayat.TeksArab + " " });
-                TeksMushaf.Inlines.Add(new InlineUIContainer { Child = BuatPenandaAyat(ayat.NomorAyat) });
-                TeksMushaf.Inlines.Add(new Run { Text = "  " });
+                ParagrafMushaf.Inlines.Add(new Run { Text = ayat.TeksArab + " " });
+                ParagrafMushaf.Inlines.Add(new InlineUIContainer { Child = BuatPenandaAyat(ayat.NomorAyat) });
+                ParagrafMushaf.Inlines.Add(new Run { Text = "  " });
             }
         }
 

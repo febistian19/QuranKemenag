@@ -1,8 +1,5 @@
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using QuranKemenag.Views;
-using System;
-using System.Threading.Tasks;
 
 namespace QuranKemenag
 {
@@ -11,32 +8,7 @@ namespace QuranKemenag
         public MainWindow()
         {
             InitializeComponent();
-            NavDashboard.IsChecked = true; // set setelah semua elemen sidebar siap
-        }
-
-        public void BukaDashboard()
-        {
-            MainContent.Content = new DashboardView(this);
-            HeaderTitle.Text = "Dashboard";
-            if (NavDashboard != null) NavDashboard.IsChecked = true;
-        }
-
-        public void NavSurahDariHalamanLain()
-        {
-            // Dipanggil dari tombol "Kembali" di AyatReaderView
-            BukaDashboard();
-        }
-
-        public void BukaAyatReader(int nomorSurah, int ayatMulai = 1)
-        {
-            MainContent.Content = new AyatReaderView(this, nomorSurah, ayatMulai);
-            HeaderTitle.Text = "Baca Ayat";
-            if (NavSurah != null) NavSurah.IsChecked = false; // supaya highlight sidebar tidak "nyangkut" di Per Surah
-        }
-
-        public void BukaBookmarkList()
-        {
-            _ = TampilkanBelumTersediaAsync("Halaman Semua Bookmark belum dimigrasikan ke WinUI.");
+            NavDashboard.IsChecked = true;
         }
 
         private void NavDashboard_Checked(object sender, RoutedEventArgs e)
@@ -48,39 +20,80 @@ namespace QuranKemenag
         private void NavSurah_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
-            _ = TampilkanBelumTersediaAsync("Halaman daftar Per Surah belum dimigrasikan ke WinUI.");
+            HeaderTitle.Text = "Surah";
+            MainContent.Content = new SurahListView(this);
         }
 
         private void NavJuz_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
-            _ = TampilkanBelumTersediaAsync("Halaman Per Juz belum dimigrasikan ke WinUI.");
+            HeaderTitle.Text = "Juz";
+            MainContent.Content = new JuzListView(this);
         }
 
         private void NavSettings_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
-            _ = TampilkanBelumTersediaAsync("Halaman Pengaturan Tampilan belum dimigrasikan ke WinUI.");
+            HeaderTitle.Text = "Pengaturan Tampilan";
+            MainContent.Content = new SettingsView(this);
         }
 
         private void NavAbout_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
-            _ = TampilkanBelumTersediaAsync("Halaman Tentang Aplikasi belum dimigrasikan ke WinUI.");
+            HeaderTitle.Text = "Tentang Aplikasi";
+            MainContent.Content = new AboutView();
         }
 
-        private async Task TampilkanBelumTersediaAsync(string pesan)
+        public void BukaDashboard()
         {
-            var dialog = new ContentDialog
-            {
-                Title = "Belum tersedia",
-                Content = pesan,
-                CloseButtonText = "OK",
-                XamlRoot = this.Content.XamlRoot
-            };
-            await dialog.ShowAsync();
+            MainContent.Content = new DashboardView(this);
+            HeaderTitle.Text = "Dashboard";
+            if (NavDashboard != null) NavDashboard.IsChecked = true;
+        }
 
+        public void BukaAyatReader(int nomorSurah, int ayatMulai = 1)
+        {
+            MainContent.Content = new AyatReaderView(this, nomorSurah, ayatMulai);
+            HeaderTitle.Text = "Baca Ayat";
+            if (NavSurah != null) NavSurah.IsChecked = false;
+        }
+
+        public void BukaBookmarkList()
+        {
+            MainContent.Content = new BookmarkListView(this);
+            HeaderTitle.Text = "Semua Bookmark";
+        }
+
+        public void BukaPengaturan()
+        {
+            if (NavSettings != null) NavSettings.IsChecked = true;
+        }
+
+        public void NavSurahDariHalamanLain()
+        {
+            if (NavSurah != null) NavSurah.IsChecked = true;
+            else BukaDashboard();
+        }
+
+        public void NavJuzDariHalamanLain()
+        {
+            if (NavJuz != null) NavJuz.IsChecked = true;
+        }
+
+        public void NavDashboardDariHalamanLain()
+        {
             BukaDashboard();
         }
+
+        public void TerapkanTema(ElementTheme tema)
+        {
+            if (Content is FrameworkElement root)
+            {
+                root.RequestedTheme = tema;
+            }
+        }
+
+        public ElementTheme TemaSaatIni => (Content as FrameworkElement)?.RequestedTheme ?? ElementTheme.Default;
     }
 }

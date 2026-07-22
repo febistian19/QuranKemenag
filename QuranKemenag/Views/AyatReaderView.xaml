@@ -19,26 +19,52 @@
             </Grid.RowDefinitions>
 
             <!-- Toolbar pilih surah & rentang ayat -->
-            <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="24,14">
+            <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="24,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Padding="10,8" Margin="0,0,14,0" Click="Kembali_Click">
+
+                    <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Padding="10,8" Margin="0,0,16,0" Click="Kembali_Click">
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" />
                     </Button>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <ComboBox x:Name="CmbSurah" Width="220" Padding="10,7" DisplayMemberPath="DisplayJudul" SelectedValuePath="Nomor"
-                                  SelectionChanged="CmbSurah_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}" />
-                        <ComboBox x:Name="CmbAyatDari" Width="60" Padding="10,7" Margin="10,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}" />
-                        <TextBlock Text="s/d" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource TextSecondaryBrush}" />
-                        <ComboBox x:Name="CmbAyatSampai" Width="60" Padding="10,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}" />
-                        <Button Content="Tampilkan" Style="{StaticResource PrimaryButton}" Margin="14,0,0,0" Click="Tampilkan_Click" />
-                    </StackPanel>
+
+                    <ComboBox Grid.Column="1" x:Name="CmbSurah" Width="350" Height="40" Padding="12,0" DisplayMemberPath="DisplayJudul" SelectedValuePath="Nomor"
+                  SelectionChanged="CmbSurah_SelectionChanged" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="Black" />
+                            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="Black" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+
+                    <ComboBox Grid.Column="2" x:Name="CmbAyatDari" Width="88" Height="40" Padding="12,0" Margin="10,0,0,0"
+                  HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="Black" />
+                            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="Black" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="3" Text="s/d" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" />
+
+                    <ComboBox Grid.Column="4" x:Name="CmbAyatSampai" Width="88" Height="40" Padding="12,0"
+                  HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  Foreground="{StaticResource TextPrimaryBrush}" Background="White" BorderBrush="{StaticResource BorderBrush2}">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="Black" />
+                            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="Black" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+
+                    <Button Grid.Column="5" Content="Tampilkan" Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0" Margin="14,0,0,0" Click="Tampilkan_Click" />
                 </Grid>
             </Border>
 

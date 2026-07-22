@@ -28,5 +28,7 @@ namespace QuranKemenag.Models
         public int AyatMulai { get; set; }
         public int SurahSelesai { get; set; }
         public int AyatSelesai { get; set; }
+
+        public string NomorTampil => $"Juz {Nomor}";
     }
 }

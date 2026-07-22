@@ -15,11 +15,18 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\quran.db" />
+    <None Remove="Resources\Images\iluminasi.png" />
+    <None Remove="Resources\Images\logo-kemenag.png" />
     <None Remove="Themes\Colors.xaml" />
     <None Remove="Themes\Styles.xaml" />
+    <None Remove="Views\AboutView.xaml" />
     <None Remove="Views\AyatReaderView.xaml" />
+    <None Remove="Views\BookmarkListView.xaml" />
     <None Remove="Views\DashboardView.xaml" />
+    <None Remove="Views\JuzListView.xaml" />
     <None Remove="Views\MushafPageView.xaml" />
+    <None Remove="Views\SettingsView.xaml" />
+    <None Remove="Views\SurahListView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +37,12 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Resources\Images\iluminasi.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\logo-kemenag.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -51,12 +64,34 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\Images\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Update="Assets\quran.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\AboutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\BookmarkListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\JuzListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\SurahListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\MushafPageView.xaml">

@@ -9,11 +9,9 @@
     mc:Ignorable="d"
     Title="Qur'an Kemenag">
 
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
+    
 
-    <Grid>
+    <Grid RequestedTheme="Light" Background="{StaticResource BackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240" />
             <ColumnDefinition Width="*" />
@@ -31,10 +29,7 @@
                 <!-- Logo & judul aplikasi -->
                 <Border Grid.Row="0" Padding="22,26,22,22" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1">
                     <StackPanel Orientation="Horizontal">
-                        <Border Width="44" Height="44" CornerRadius="10" Background="{StaticResource PrimaryGreenBrush}">
-                            <TextBlock Text="ق" FontFamily="Traditional Arabic" FontSize="22" Foreground="White"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
+                        <Image Source="/Resources/Images/logo-kemenag.png" Width="44" Height="44" Stretch="Uniform" />
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="Qur'an Kemenag" FontWeight="Bold" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" />
                             <TextBlock Text="Versi Dekstop" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,1,0,0" />

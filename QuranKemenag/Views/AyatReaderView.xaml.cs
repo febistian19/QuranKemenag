@@ -64,6 +64,33 @@ namespace QuranKemenag.Views
             CmbAyatSampai.SelectedIndex = _surahSaatIni.JumlahAyat - 1;
 
             await TampilkanAyatAsync(nomorSurah, 1, _surahSaatIni.JumlahAyat);
+
+            // Ayat lain tetap ditampilkan semua; kalau ada ayat tujuan (mis. dari bookmark/juz),
+            // geser scroll supaya ayat itu yang terlihat di paling atas.
+            if (ayatMulai > 1)
+            {
+                ScrollKeAyat(ayatMulai);
+            }
+        }
+
+        private void ScrollKeAyat(int nomorAyat)
+        {
+            var index = _ayatSaatIni.FindIndex(a => a.NomorAyat == nomorAyat);
+            if (index < 0) return;
+
+            // Tunggu satu siklus render supaya semua kartu ayat sudah selesai digambar,
+            // baru hitung posisinya dan geser ScrollViewer ke sana.
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                PanelTeksArab.UpdateLayout();
+
+                if (AyatItemsControl.ContainerFromIndex(index) is FrameworkElement container)
+                {
+                    var posisi = container.TransformToVisual(PanelTeksArab).TransformPoint(new Windows.Foundation.Point(0, 0));
+                    double offsetTarget = PanelTeksArab.VerticalOffset + posisi.Y - 24; // 24px jarak dari atas
+                    PanelTeksArab.ChangeView(null, Math.Max(0, offsetTarget), null, false);
+                }
+            });
         }
 
         private async Task TampilkanAyatAsync(int nomorSurah, int dari, int sampai)
@@ -348,4 +375,3 @@ namespace QuranKemenag.Views
         }
     }
 }
-

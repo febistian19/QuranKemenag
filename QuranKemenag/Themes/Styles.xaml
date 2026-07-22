@@ -41,21 +41,128 @@
         <Setter Property="Background" Value="#FFFCF3" />
     </Style>
 
-    <!-- Tombol toggle (dipakai untuk "Per Ayat" / "Mushaf Per Halaman") -->
-    <Style x:Key="ToggleTabButton" TargetType="ToggleButton">
+    <!-- Tombol toggle (dipakai untuk "Surah" / "Juz", "Per Ayat" / "Mushaf Per Halaman") -->
+    <Style x:Key="ToggleTabButton" TargetType="RadioButton">
         <Setter Property="Padding" Value="16,7" />
         <Setter Property="FontSize" Value="12.5" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="CornerRadius" Value="7" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver" />
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="{StaticResource PrimaryGreenBrush}" />
+                                        <Setter Target="Isi.Foreground" Value="White" />
+                                        <Setter Target="Isi.FontWeight" Value="SemiBold" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Bd" CornerRadius="7" Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="Isi" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"
+                                              Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
-    <!-- Kontainer toggle group -->
+    <!-- Kontainer toggle group (bungkus 2 ToggleTabButton) -->
     <Style x:Key="ToggleTabGroup" TargetType="Border">
         <Setter Property="Background" Value="#EEF0F1" />
         <Setter Property="CornerRadius" Value="9" />
         <Setter Property="Padding" Value="3" />
+    </Style>
+
+    <!-- Alias nama, dipakai di halaman Pengaturan untuk pil Tema -->
+    <Style x:Key="ThemePillGroup" TargetType="Border" BasedOn="{StaticResource ToggleTabGroup}" />
+    <Style x:Key="ThemePillRadio" TargetType="RadioButton" BasedOn="{StaticResource ToggleTabButton}" />
+
+    <!-- ===================== TEXTBOX (pencarian, dsb) ===================== -->
+    <Style x:Key="RoundedTextBox" TargetType="TextBox">
+        <Setter Property="Padding" Value="12,9" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <!-- ===================== BARIS BAHASA - centang lingkaran di kanan ===================== -->
+    <Style x:Key="LanguageRowRadio" TargetType="RadioButton">
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Bd.Background" Value="#F5F6F7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Target="Lingkaran.Background" Value="{StaticResource PrimaryGreenBrush}" />
+                                        <Setter Target="Lingkaran.BorderBrush" Value="{StaticResource PrimaryGreenBrush}" />
+                                        <Setter Target="Centang.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Bd" Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                                  Content="{TemplateBinding Content}" />
+                                <Border x:Name="Lingkaran" Grid.Column="1" Width="20" Height="20" CornerRadius="10"
+                                        BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1.5" VerticalAlignment="Center">
+                                    <FontIcon x:Name="Centang" FontFamily="Segoe Fluent Icons" Glyph="&#xE73E;" FontSize="11"
+                                              Foreground="White" Visibility="Collapsed"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Badge kode bahasa bulat (mis. "ID", "EN", "AR") -->
+    <Style x:Key="KodeBahasaBadge" TargetType="Border">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Background" Value="#E7F4EF" />
     </Style>
 
     <!-- Kartu interaktif (dipakai untuk kartu ekspor Word/PowerPoint) -->
