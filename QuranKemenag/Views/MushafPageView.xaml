@@ -13,12 +13,15 @@
         <!-- ===== Halaman mushaf dengan bingkai gambar iluminasi ===== -->
         <Viewbox Grid.Row="0" Stretch="Uniform" Margin="30" MaxWidth="720" MaxHeight="820">
             <Grid Width="640" Height="800">
+                <Grid.Clip>
+                    <RectangleGeometry Rect="0,0,640,800" />
+                </Grid.Clip>
 
                 <!-- Layer 1: gambar bingkai iluminasi -->
                 <Image Source="/Resources/Images/iluminasi.png" Stretch="Fill" />
 
                 <!-- Layer 2: konten ayat di dalam area putih bingkai -->
-                <Grid Margin="105,215,105,90">
+                <Grid Margin="95,215,105,90">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -32,9 +35,11 @@
                                    Foreground="{StaticResource PrimaryGreenDarkBrush}" FlowDirection="RightToLeft" />
                     </Border>
 
-                    <ScrollViewer Grid.Row="1" Padding="28,0,28,0">
-                        <RichTextBlock x:Name="TeksMushaf" FontFamily="Traditional Arabic" FontSize="24" LineHeight="52"
-                    TextAlignment="Right" FlowDirection="RightToLeft">
+                    <ScrollViewer Grid.Row="1" Width="430" Padding="28,0,28,0"
+                                  HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <RichTextBlock x:Name="TeksMushaf" FontFamily="LPMQ Isep Misbah" FontSize="24" LineHeight="52"
+                    TextAlignment="Right" FlowDirection="RightToLeft" TextWrapping="Wrap" Width="374">
                             <Paragraph x:Name="ParagrafMushaf" />
                         </RichTextBlock>
                     </ScrollViewer>

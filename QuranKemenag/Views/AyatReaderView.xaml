@@ -112,7 +112,7 @@
                                     </Border>
 
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
-                                               FontFamily="Traditional Arabic" HorizontalAlignment="Right"
+                                               FontFamily="lpmq isep misbah" HorizontalAlignment="Right"
                                                FlowDirection="RightToLeft" TextWrapping="Wrap" MaxWidth="520" LineHeight="46"
                                                Foreground="{StaticResource TextPrimaryBrush}"
                                                FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
