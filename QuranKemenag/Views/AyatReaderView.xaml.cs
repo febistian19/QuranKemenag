@@ -1,20 +1,23 @@
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using QuranKemenag.Data.Database;
-using QuranKemenag.Models;
-using QuranKemenag.Services;
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using QuranKemenag.Data.Database;
+using QuranKemenag.Models;
+using QuranKemenag.Services;
 
 
 namespace QuranKemenag.Views
@@ -33,6 +36,10 @@ namespace QuranKemenag.Views
         public static bool TampilkanLatinGlobal { get; private set; } = true;
         public static bool TampilkanTerjemahGlobal { get; private set; } = true;
         public static double UkuranFontGlobal { get; private set; } = 26;
+        // Selected font for Arabic text. Static so DataTemplate x:Bind can access it.
+        public static FontFamily SelectedFontFamily { get; private set; } = new FontFamily("ms-appx:///Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ IsepMisbah");
+
+        private bool _fontsLoaded;
 
         public AyatReaderView(MainWindow mainWindow, int nomorSurahAwal, int ayatMulai = 1)
         {
@@ -41,7 +48,14 @@ namespace QuranKemenag.Views
 
             UkuranFontGlobal = _fontSize;
 
-            Loaded += async (s, e) => await InisialisasiAsync(nomorSurahAwal, ayatMulai);
+            // Ensure default font is set (in case XAML selection hasn't fired yet)
+            // Will be replaced when LoadFontsFromAssetsAsync runs
+
+            Loaded += async (s, e) =>
+            {
+                await LoadFontsFromAssetsAsync();
+                await InisialisasiAsync(nomorSurahAwal, ayatMulai);
+            };
         }
 
         private async Task InisialisasiAsync(int nomorSurahAwal, int ayatMulai)
@@ -51,6 +65,76 @@ namespace QuranKemenag.Views
             CmbSurah.SelectedValue = nomorSurahAwal;
 
             await MuatSurahAsync(nomorSurahAwal, ayatMulai);
+        }
+
+        private void CmbJenisFont_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbJenisFont == null) return;
+
+            if (CmbJenisFont.SelectedItem is ComboBoxItem item && item.Tag is string uri)
+            {
+                try
+                {
+                    SelectedFontFamily = new FontFamily(uri);
+                }
+                catch
+                {
+                    // ignore invalid uri
+                }
+
+                SegarkanKartuAyat();
+            }
+        }
+
+        private async Task LoadFontsFromAssetsAsync()
+        {
+            try
+            {
+                if (_fontsLoaded) return;
+
+                var basePath = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+                var fontsDir = Path.Combine(basePath, "Assets", "Fonts");
+                if (!Directory.Exists(fontsDir)) return;
+
+                var filePaths = Directory.GetFiles(fontsDir)
+                    .Where(f => f.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".otf", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                CmbJenisFont.Items.Clear();
+
+                var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var fp in filePaths)
+                {
+                    var name = Path.GetFileName(fp);
+                    var raw = Path.GetFileNameWithoutExtension(name);
+                    var displayName = raw.Replace('_', ' ');
+                    displayName = Regex.Replace(displayName, "[-_]?Regular$", "", RegexOptions.IgnoreCase).Trim();
+                    displayName = Regex.Replace(displayName, "([a-z])([A-Z])", "$1 $2");
+                    if (string.IsNullOrWhiteSpace(displayName)) displayName = raw;
+                    if (seen.Contains(displayName)) continue;
+
+                    seen.Add(displayName);
+                    var uri = $"ms-appx:///Assets/Fonts/{name}#{displayName}";
+                    var item = new ComboBoxItem { Content = displayName, Tag = uri };
+                    CmbJenisFont.Items.Add(item);
+                }
+
+                if (CmbJenisFont.Items.Count > 0)
+                {
+                    CmbJenisFont.SelectedIndex = 0;
+                    if (CmbJenisFont.SelectedItem is ComboBoxItem first && first.Tag is string firstUri)
+                    {
+                        try { SelectedFontFamily = new FontFamily(firstUri); } catch { }
+                    }
+                }
+
+                _fontsLoaded = true;
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private async Task MuatSurahAsync(int nomorSurah, int ayatMulai = 1)

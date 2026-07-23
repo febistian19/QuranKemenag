@@ -68,10 +68,7 @@
                 <Border Grid.Column="1" Style="{StaticResource CardBorder}" Margin="10,0,0,0">
                     <StackPanel>
                         <TextBlock Text="JENIS FONT MUSHAF" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10" />
-                        <ComboBox SelectedIndex="0" HorizontalAlignment="Stretch">
-                            <ComboBoxItem Content="Uthman Taha (Standar Madinah)" />
-                            <ComboBoxItem Content="LPMQ Isep Misbah" />
-                        </ComboBox>
+                        <ComboBox x:Name="CmbFontMushaf" HorizontalAlignment="Stretch" SelectionChanged="CmbFontMushaf_SelectionChanged" />
                     </StackPanel>
                 </Border>
             </Grid>

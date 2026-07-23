@@ -44,7 +44,7 @@ namespace QuranKemenag.Views
             var teks = new TextBlock
             {
                 Text = KeAngkaArab(nomorAyat),
-                FontSize = 13,
+                FontSize = 22,
                 FontFamily = new FontFamily("LPMQ ISEP MISBAH"),
                 Foreground = (Brush)Application.Current.Resources["PrimaryGreenDarkBrush"],
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -53,10 +53,10 @@ namespace QuranKemenag.Views
 
             return new Border
             {
-                Width = 26,
-                Height = 26,
+                Width = 44,
+                Height = 44,
                 CornerRadius = new CornerRadius(13),
-                Background = (Brush)Application.Current.Resources["GoldBrush"],
+                //Background = (Brush)Application.Current.Resources["GoldBrush"],
                 Opacity = 0.9,
                 Child = teks
             };

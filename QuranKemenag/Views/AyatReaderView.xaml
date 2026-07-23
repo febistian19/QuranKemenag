@@ -112,7 +112,7 @@
                                     </Border>
 
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
-                                               FontFamily="lpmq isep misbah" HorizontalAlignment="Right"
+                                               FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneWay}" HorizontalAlignment="Right"
                                                FlowDirection="RightToLeft" TextWrapping="Wrap" MaxWidth="520" LineHeight="46"
                                                Foreground="{StaticResource TextPrimaryBrush}"
                                                FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
@@ -185,6 +185,10 @@
                     </ComboBox>
 
                     <!-- Ukuran font hanya relevan di mode Per Ayat -->
+
+                    <TextBlock Text="Jenis Font" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <ComboBox x:Name="CmbJenisFont" HorizontalAlignment="Stretch" SelectionChanged="CmbJenisFont_SelectionChanged" />
+
                     <StackPanel x:Name="PanelUkuranFont">
                         <TextBlock Text="Ukuran Font" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
                         <Grid>
@@ -198,6 +202,8 @@
                             <Button Grid.Column="2" Content="+" Width="32" FontSize="16" Margin="6,0,0,0" Style="{StaticResource SecondaryButton}" Click="FontTambah_Click" />
                         </Grid>
                     </StackPanel>
+
+                    
 
                     <TextBlock Text="Aksi" FontWeight="SemiBold" FontSize="12.5" Margin="0,22,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
                     <Button HorizontalAlignment="Stretch" Margin="0,4" Style="{StaticResource SecondaryButton}" Click="SalinAyat_Click">

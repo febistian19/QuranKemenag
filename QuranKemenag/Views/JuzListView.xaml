@@ -21,9 +21,6 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="260" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Style="{StaticResource SecondaryButton}" Padding="10,8" Margin="0,0,14,0" Click="Kembali_Click">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72B;" FontSize="15" />
-            </Button>
             <TextBlock Grid.Column="1" Text="Juz" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" />
             <TextBox Grid.Column="2" x:Name="TxtCari" Style="{StaticResource RoundedTextBox}"
                      PlaceholderText="Cari juz..." TextChanged="TxtCari_TextChanged" />
