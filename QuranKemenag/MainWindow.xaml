@@ -107,13 +107,13 @@
                 </StackPanel>
 
                 <!-- Status database di bagian bawah sidebar -->
-                <Border Grid.Row="2" Margin="16,10,16,18" Padding="12,10" Background="#F5F6F7" CornerRadius="8">
+                <!--<Border Grid.Row="2" Margin="16,10,16,18" Padding="12,10" Background="#F5F6F7" CornerRadius="8">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse x:Name="DotStatusDb" Width="8" Height="8" Fill="#1E7145" VerticalAlignment="Center" />
                         <TextBlock x:Name="TxtStatusDb" Text="Data offline siap dipakai" FontSize="11" Margin="8,0,0,0"
                                    Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap" VerticalAlignment="Center" />
                     </StackPanel>
-                </Border>
+                </Border>-->
             </Grid>
         </Border>
 

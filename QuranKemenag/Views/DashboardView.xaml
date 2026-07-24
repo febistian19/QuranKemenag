@@ -5,11 +5,11 @@
     xmlns:local="using:QuranKemenag.Views">
 
     <ScrollViewer Padding="24">
-        <StackPanel MaxWidth="1000" HorizontalAlignment="Left">
+        <StackPanel HorizontalAlignment="Stretch">
 
             <!-- Banner -->
             <Border Background="{StaticResource BannerGradientBrush}" CornerRadius="14" Padding="28" Height="180">
-                <StackPanel VerticalAlignment="Center" MaxWidth="900">
+                <StackPanel VerticalAlignment="Center" MaxWidth="900" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <TextBlock Text="Ekspor Ayat ke Layout Profesional" Foreground="White" FontSize="18" FontWeight="Bold" />
                     <TextBlock Text="Transformasi teks suci ke dalam tata letak profesional dengan presisi tinggi. Sesuaikan tipografi dan ekspor dengan mudah ke format Word atau PowerPoint untuk kebutuhan publikasi Anda."
                                Foreground="#E5F5F1" TextWrapping="Wrap" Margin="0,10,0,16" />
@@ -23,7 +23,10 @@
                 <StackPanel>
                     <Border Padding="16,14" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="13" Foreground="{StaticResource GoldBrush}" VerticalAlignment="Center" />
+                            <Polygon Points="1,0 11,0 11,15 6,11 1,15"
+                             Fill="{StaticResource PrimaryGreenDarkBrush}"
+                             Width="11" Height="15" Stretch="Uniform"
+                             VerticalAlignment="Center" />
                             <TextBlock Text="Bookmark Terbaru" FontWeight="SemiBold" Margin="8,0,0,0" Foreground="{StaticResource TextPrimaryBrush}" />
                         </StackPanel>
                     </Border>

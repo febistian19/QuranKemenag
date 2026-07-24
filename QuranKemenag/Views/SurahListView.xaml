@@ -38,8 +38,8 @@
         </StackPanel>
 
         <!-- Grid kartu surah -->
-        <ScrollViewer Grid.Row="2" Padding="24,8,24,24" VerticalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="SurahItemsControl">
+        <ScrollViewer Grid.Row="2" Padding="24,8,24,24" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Center">
+            <ItemsControl x:Name="SurahItemsControl" HorizontalAlignment="Center" MaxWidth="1380">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsWrapGrid Orientation="Horizontal" />

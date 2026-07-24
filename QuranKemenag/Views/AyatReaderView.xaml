@@ -118,12 +118,12 @@
                                                FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
                                                Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
 
-                                    <!-- Tombol bookmark -->
+                                    <!-- Tombol bookmark --><!--
                                     <Button Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="8,0,0,0"
                                             Background="Transparent" BorderThickness="0"
                                             Tag="{x:Bind NomorAyat}" Click="BookmarkAyat_Click">
                                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="16" Foreground="{x:Bind WarnaBookmark, Mode=OneWay}" />
-                                    </Button>
+                                    </Button>-->
 
                                     <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{x:Bind TeksLatin}"
                                                FontSize="15" Foreground="{StaticResource GoldBrush}" FontStyle="Italic" Margin="0,12,0,0" TextWrapping="Wrap"
@@ -133,6 +133,15 @@
                                                 Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}">
                                         <TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />
                                         <TextBlock Text="{x:Bind Terjemah}" TextWrapping="Wrap" Margin="0,3,0,0" FontSize="13.5" Foreground="{StaticResource TextPrimaryBrush}" />
+
+                                        <Button HorizontalAlignment="Right" Margin="0,10,0,0"
+                                                Background="Transparent" BorderThickness="0" Padding="4"
+                                                Tag="{x:Bind NomorAyat}" Click="BookmarkAyat_Click">
+                                            <Polygon Points="2,1 14,1 14,19 8,14 2,19"
+                                                 Fill="{x:Bind WarnaBookmark, Mode=OneWay}"
+                                                 Stroke="{StaticResource PrimaryGreenBrush}" StrokeThickness="1"
+                                                 Width="14" Height="18" Stretch="Uniform" />
+                                        </Button>
                                     </StackPanel>
 
                                     <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"

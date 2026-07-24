@@ -18,6 +18,7 @@ using Windows.Storage.Pickers;
 using QuranKemenag.Data.Database;
 using QuranKemenag.Models;
 using QuranKemenag.Services;
+using Windows.UI;
 
 
 namespace QuranKemenag.Views
@@ -203,8 +204,8 @@ namespace QuranKemenag.Views
                 foreach (var ayat in _ayatSaatIni)
                 {
                     ayat.WarnaBookmark = BookmarkService.SudahDisimpan(nomorSurah, ayat.NomorAyat)
-                        ? new SolidColorBrush(Colors.Goldenrod)
-                        : new SolidColorBrush(Colors.LightGray);
+                        ? new SolidColorBrush(Color.FromArgb(255, 0x1E, 0x71, 0x45))
+                        : new SolidColorBrush(Colors.Transparent);
                 }
             }
 
@@ -473,8 +474,8 @@ namespace QuranKemenag.Views
                 if (ayat != null)
                 {
                     ayat.WarnaBookmark = BookmarkService.SudahDisimpan(_surahSaatIni.Nomor, nomorAyat)
-                        ? new SolidColorBrush(Colors.Goldenrod)
-                        : new SolidColorBrush(Colors.LightGray);
+                        ? new SolidColorBrush(Color.FromArgb(255, 0x1E, 0x71, 0x45))
+                        : new SolidColorBrush(Colors.Transparent);
 
                     SegarkanKartuAyat();
                 }
