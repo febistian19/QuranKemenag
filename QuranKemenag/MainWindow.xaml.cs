@@ -52,15 +52,25 @@ namespace QuranKemenag
             if (NavDashboard != null) NavDashboard.IsChecked = true;
         }
 
+        private void UncheckSemuaNavSidebar()
+        {
+            if (NavDashboard != null) NavDashboard.IsChecked = false;
+            if (NavSurah != null) NavSurah.IsChecked = false;
+            if (NavJuz != null) NavJuz.IsChecked = false;
+            if (NavSettings != null) NavSettings.IsChecked = false;
+            if (NavAbout != null) NavAbout.IsChecked = false;
+        }
+
         public void BukaAyatReader(int nomorSurah, int ayatMulai = 1)
         {
+            UncheckSemuaNavSidebar();
             MainContent.Content = new AyatReaderView(this, nomorSurah, ayatMulai);
             HeaderTitle.Text = "Baca Ayat";
-            if (NavSurah != null) NavSurah.IsChecked = false;
         }
 
         public void BukaBookmarkList()
         {
+            UncheckSemuaNavSidebar();
             MainContent.Content = new BookmarkListView(this);
             HeaderTitle.Text = "Semua Bookmark";
         }
