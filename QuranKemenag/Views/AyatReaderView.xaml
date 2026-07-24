@@ -8,7 +8,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="270" />
+            <ColumnDefinition x:Name="ColPengaturan" Width="270" />
         </Grid.ColumnDefinitions>
 
         <!-- ===== Kolom kiri: toolbar + isi ===== -->
@@ -155,7 +155,18 @@
         <Border Grid.Column="1" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1,0,0,0" Padding="20">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <TextBlock Text="PENGATURAN TAMPILAN" FontWeight="Bold" FontSize="12" Margin="0,0,0,16" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Padding="5" Margin="0,0,8,0"
+                                Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1" CornerRadius="6"
+                                Click="BtnTogglePengaturan_Click" ToolTipService.ToolTip="Sembunyikan panel ini">
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76C;" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}" />
+                        </Button>
+                        <TextBlock Grid.Column="1" Text="PENGATURAN TAMPILAN" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}" />
+                    </Grid>
 
                     <!-- Checkbox mode Per Ayat -->
                     <StackPanel x:Name="PanelCentangPerAyat">
@@ -257,5 +268,18 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
+        <!-- Tab kecil untuk buka lagi panel pengaturan — cuma kelihatan saat panel tertutup -->
+        <Button x:Name="BtnTogglePengaturan" Grid.Column="0" 
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Width="40" Height="40"
+                Margin="0,16,20,0" Padding="0"
+                Background="White"
+                BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1"
+                CornerRadius="8"
+                Visibility="Collapsed"
+                Click="BtnTogglePengaturan_Click"
+                ToolTipService.ToolTip="Tampilkan panel pengaturan">
+            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE713;" FontSize="18" />
+        </Button>
     </Grid>
 </UserControl>

@@ -480,5 +480,16 @@ namespace QuranKemenag.Views
                 }
             }
         }
+
+        
+
+        private bool _pengaturanTersembunyi = false;
+
+        private void BtnTogglePengaturan_Click(object sender, RoutedEventArgs e)
+        {
+            _pengaturanTersembunyi = !_pengaturanTersembunyi;
+            ColPengaturan.Width = _pengaturanTersembunyi ? new GridLength(0) : new GridLength(270);
+            BtnTogglePengaturan.Visibility = _pengaturanTersembunyi ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

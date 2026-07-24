@@ -9,11 +9,11 @@
     mc:Ignorable="d"
     Title="Qur'an Kemenag">
 
-    
+
 
     <Grid RequestedTheme="Light" Background="{StaticResource BackgroundBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240" />
+            <ColumnDefinition x:Name="ColSidebar" Width="240" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -29,9 +29,9 @@
                 <!-- Logo & judul aplikasi -->
                 <Border Grid.Row="0"
                 Height="64"
-                Background="White"
+                Background="{StaticResource SidebarBrush}"
                 BorderBrush="{StaticResource BorderBrush2}"
-                BorderThickness="0,0,0,1"
+                BorderThickness="0,0,1,0"
                 Padding="16,0">
 
                     <Grid VerticalAlignment="Center">
@@ -66,6 +66,7 @@
                     </Grid>
 
                 </Border>
+                
 
                 <!-- Menu navigasi -->
                 <StackPanel Grid.Row="1" Margin="0,10,0,0">
@@ -124,9 +125,20 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1">
-                <TextBlock x:Name="HeaderTitle" Text="Dashboard"
-                           FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="28,0"
-                           Foreground="{StaticResource TextPrimaryBrush}" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                    <Button x:Name="BtnToggleSidebar" 
+                            Padding="7" Margin="0,0,14,0"
+                            Background="Transparent"
+                            BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1"
+                            CornerRadius="6"
+                            Click="BtnToggleSidebar_Click"
+                            ToolTipService.ToolTip="Sembunyikan/tampilkan menu">
+                        <FontIcon x:Name="IkonToggleSidebar" FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="14" />
+                    </Button>
+                    <TextBlock x:Name="HeaderTitle" Text="Dashboard"
+                               FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+                </StackPanel>
             </Border>
 
             <ContentControl x:Name="MainContent" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />

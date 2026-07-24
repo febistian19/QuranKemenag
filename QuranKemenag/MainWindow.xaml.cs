@@ -95,5 +95,16 @@ namespace QuranKemenag
         }
 
         public ElementTheme TemaSaatIni => (Content as FrameworkElement)?.RequestedTheme ?? ElementTheme.Default;
+
+        private bool _sidebarTersembunyi = false;
+
+        private void BtnToggleSidebar_Click(object sender, RoutedEventArgs e)
+        {
+            _sidebarTersembunyi = !_sidebarTersembunyi;
+            ColSidebar.Width = _sidebarTersembunyi ? new GridLength(0) : new GridLength(240);
+
+            // Icon berubah sesuai status: panah kiri saat terbuka, hamburger saat tertutup
+            IkonToggleSidebar.Glyph = _sidebarTersembunyi ? "\uE700" : "\uE76B";
+        }
     }
 }
