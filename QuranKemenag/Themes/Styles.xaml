@@ -99,14 +99,15 @@
         </Setter>
     </Style>
 
-    <!-- Badge nomor ayat (lingkaran emas) -->
+    <!-- Badge nomor ayat (bingkai ornamen emas dari gambar) -->
     <Style x:Key="NomorBadge" TargetType="Border">
-        <Setter Property="Width" Value="28" />
-        <Setter Property="Height" Value="28" />
-        <Setter Property="CornerRadius" Value="14" />
-        <Setter Property="BorderBrush" Value="{StaticResource GoldBrush}" />
-        <Setter Property="BorderThickness" Value="1.4" />
-        <Setter Property="Background" Value="#FFFCF3" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="/Resources/Images/bingkai-nomor-ayat.png" Stretch="Uniform" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Tombol toggle (dipakai untuk "Surah" / "Juz", "Per Ayat" / "Mushaf Per Halaman") -->

@@ -6,6 +6,7 @@
     xmlns:conv="using:QuranKemenag.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            <conv:IntKeAngkaArabConverter x:Key="IntKeAngkaArab" />
             <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />

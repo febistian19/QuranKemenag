@@ -107,16 +107,18 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource NomorBadge}" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                        <TextBlock Text="{x:Bind NomorAyat}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
-                                    </Border>
+                                    <Grid Grid.Row="0" Grid.Column="0" Width="34" Height="34" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-2,0,0">
+                                        <Image Source="/Resources/Images/bingkai-nomor-ayat.png" Stretch="Uniform" />
+                                        <TextBlock Text="{x:Bind NomorAyat, Converter={StaticResource IntKeAngkaArab}}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
+                                    </Grid>
 
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
-                                               FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneWay}" HorizontalAlignment="Right"
-                                               FlowDirection="RightToLeft" TextWrapping="Wrap" MaxWidth="520" LineHeight="46"
-                                               Foreground="{StaticResource TextPrimaryBrush}"
-                                               FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
-                                               Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+                                       FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneWay}" HorizontalAlignment="Stretch"
+                                       TextAlignment="Justify"
+                                       FlowDirection="RightToLeft" TextWrapping="Wrap" LineHeight="46"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
+                                       Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
 
                                     <!-- Tombol bookmark --><!--
                                     <Button Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="8,0,0,0"

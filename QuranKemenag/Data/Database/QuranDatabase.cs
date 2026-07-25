@@ -6,6 +6,7 @@ using Microsoft.Data.Sqlite;
 using QuranKemenag.Models;
 using Windows.Storage;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace QuranKemenag.Data.Database
 {
@@ -26,8 +27,6 @@ namespace QuranKemenag.Data.Database
         /// </summary>
         public static async Task InisialisasiAsync()
         {
-            if (File.Exists(DbPath)) return; // sudah pernah disalin sebelumnya
-
             var assetFile = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/quran.db"));
 
@@ -70,25 +69,66 @@ namespace QuranKemenag.Data.Database
             await koneksi.OpenAsync();
 
             var cmd = koneksi.CreateCommand();
-            cmd.CommandText = "SELECT ayat, teks FROM quran WHERE surah = $nomor ORDER BY ayat";
+            cmd.CommandText = """
+                SELECT q.ayat, q.teks, t.teks AS terjemah, t.footnote
+                FROM quran q
+                LEFT JOIN terjemah_id t ON t.surah = q.surah AND t.ayat = q.ayat
+                WHERE q.surah = $nomor
+                ORDER BY q.ayat
+                """;
             cmd.Parameters.AddWithValue("$nomor", nomorSurah);
 
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
+                string? footnote = reader.IsDBNull(3) ? null : reader.GetString(3);
+
                 daftar.Add(new Ayat
                 {
                     NomorSurah = nomorSurah,
                     NomorAyat = reader.GetInt32(0),
                     TeksArab = reader.GetString(1),
-                    TeksLatin = "",       // belum tersedia di database ini
-                    Terjemah = "",        // tempat siap diisi saat sumber terjemahan tersedia
-                    CatatanKaki = null,
+                    TeksLatin = "",       // masih belum tersedia di database ini
+                    Terjemah = BersihkanPenandaCatatanKaki(reader.IsDBNull(2) ? "" : reader.GetString(2)),
+                    CatatanKaki = string.IsNullOrWhiteSpace(footnote) ? null : footnote,
                 });
             }
 
             return daftar;
         }
+
+        /// <summary>
+        /// Data terjemahan sumber kadang menempelkan nomor catatan kaki langsung ke kata
+        /// sebelumnya tanpa spasi (mis. "tempatnya206)"). Method ini menyisipkan spasi
+        /// otomatis dan mengubah angkanya jadi superscript, supaya kelihatan seperti
+        /// nomor catatan kaki pada umumnya, bukan angka biasa yang menempel di kalimat.
+        /// </summary>
+        private static string BersihkanPenandaCatatanKaki(string teks)
+        {
+            if (string.IsNullOrEmpty(teks)) return teks;
+
+            teks = Regex.Replace(teks, @"(?<=[^\s\d])(\d+\))", " $1");
+            teks = Regex.Replace(teks, @"(\d+)\)", m => KeSuperscript(m.Groups[1].Value) + "\u207E");
+
+            return teks;
+        }
+
+        private static string KeSuperscript(string angka)
+        {
+            var peta = new Dictionary<char, char>
+            {
+                {'0', '\u2070'}, {'1', '\u00B9'}, {'2', '\u00B2'}, {'3', '\u00B3'}, {'4', '\u2074'},
+                {'5', '\u2075'}, {'6', '\u2076'}, {'7', '\u2077'}, {'8', '\u2078'}, {'9', '\u2079'},
+            };
+            var sb = new System.Text.StringBuilder();
+            foreach (var c in angka)
+            {
+                sb.Append(peta.TryGetValue(c, out var sup) ? sup : c);
+            }
+            return sb.ToString();
+        }
+
+        
 
         public static async Task<List<Juz>> AmbilDaftarJuzAsync()
         {

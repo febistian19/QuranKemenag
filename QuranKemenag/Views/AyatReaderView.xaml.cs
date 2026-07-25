@@ -492,5 +492,7 @@ namespace QuranKemenag.Views
             ColPengaturan.Width = _pengaturanTersembunyi ? new GridLength(0) : new GridLength(270);
             BtnTogglePengaturan.Visibility = _pengaturanTersembunyi ? Visibility.Visible : Visibility.Collapsed;
         }
+
+
     }
 }

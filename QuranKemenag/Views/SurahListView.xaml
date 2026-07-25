@@ -56,7 +56,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.Column="0" Style="{StaticResource NomorBadge}" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Nomor}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Nomor, Converter={StaticResource IntKeAngkaArab}}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
                                 </Border>
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                     <TextBlock Text="{Binding DisplayJudul}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" />
