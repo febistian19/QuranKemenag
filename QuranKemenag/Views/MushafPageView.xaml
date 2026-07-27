@@ -10,23 +10,23 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- ===== Halaman mushaf dengan bingkai gambar iluminasi — dibesarkan mengisi ruang tersedia ===== -->
+        <!-- ===== Halaman mushaf — bingkai berganti sesuai surah & nomor halaman ===== -->
         <Viewbox Grid.Row="0" Stretch="Uniform" Margin="20,14">
             <Grid Width="640" Height="800">
                 <Grid.Clip>
                     <RectangleGeometry Rect="0,0,640,800" />
                 </Grid.Clip>
 
-                <!-- Layer 1: gambar bingkai iluminasi -->
-                <Image Source="/Resources/Images/iluminasi.png" Stretch="Fill" />
+                <!-- Layer 1: gambar bingkai (Source diganti di code-behind sesuai halaman) -->
+                <Image x:Name="ImgBingkai" Stretch="Fill" />
 
-                <!-- Layer 2: konten ayat — mengisi penuh area putih bingkai -->
-                <Grid Margin="120,195,145,65">
-                    <ScrollViewer Width="375" Padding="15,0,15,0"
+                <!-- Layer 2: konten ayat — Margin & lebar diatur di code-behind sesuai bingkai aktif -->
+                <Grid x:Name="GridKontenAyat">
+                    <ScrollViewer x:Name="SvTeksMushaf" Padding="15,0,15,0"
                                   HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled"
                                   VerticalScrollBarVisibility="Auto">
-                        <RichTextBlock x:Name="TeksMushaf" FontFamily="LPMQ Isep Misbah" FontSize="23" LineHeight="42"
-                    TextAlignment="Justify" FlowDirection="RightToLeft" TextWrapping="Wrap" Width="345">
+                        <RichTextBlock x:Name="TeksMushaf" FontFamily="LPMQ Isep Misbah"
+                                       TextAlignment="Justify" FlowDirection="RightToLeft" TextWrapping="Wrap">
                             <Paragraph x:Name="ParagrafMushaf" />
                         </RichTextBlock>
                     </ScrollViewer>
@@ -34,14 +34,28 @@
             </Grid>
         </Viewbox>
 
-        <!-- ===== Info ayat — di bawah, rata kanan bingkai ===== -->
+        <!-- ===== Navigasi halaman: ◀ [nomor] ▶ ===== -->
         <Border Grid.Row="1" Background="#FFFCEA" BorderBrush="{StaticResource GoldBrush}" BorderThickness="1.5"
-                CornerRadius="16" Padding="18,6" HorizontalAlignment="Right" Margin="0,4,55,14">
-            <TextBlock x:Name="TxtInfoBawah" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                CornerRadius="18" Padding="4" HorizontalAlignment="Center" Margin="0,4,0,16">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnHalSebelumnya" Width="36" Height="36" Padding="0" Margin="2"
+                        Background="Transparent" BorderThickness="0" CornerRadius="14"
+                        Click="BtnSebelumnya_Click" ToolTipService.ToolTip="Halaman sebelumnya">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="14" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
+                </Button>
+                <TextBlock x:Name="TxtNomorHalaman" Text="1" FontWeight="Bold" FontSize="14"
+                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"
+                           Width="44" TextAlignment="Center" />
+                <Button x:Name="BtnHalSelanjutnya" Width="36" Height="36" Padding="0" Margin="2"
+                        Background="Transparent" BorderThickness="0" CornerRadius="14"
+                        Click="BtnSelanjutnya_Click" ToolTipService.ToolTip="Halaman berikutnya">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76C;" FontSize="14" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
+                </Button>
+            </StackPanel>
         </Border>
 
-        <!-- TxtNamaSurahArab tetap ada di code-behind supaya kompilasi tidak error,
-             tapi tidak dirender di UI (judul dihapus sesuai permintaan) -->
+        <!-- Dipertahankan supaya code-behind lama tidak error; tidak dirender (judul sudah ada di gambar bingkai) -->
         <TextBlock x:Name="TxtNamaSurahArab" Visibility="Collapsed" />
+        <TextBlock x:Name="TxtInfoBawah" Visibility="Collapsed" />
     </Grid>
 </UserControl>

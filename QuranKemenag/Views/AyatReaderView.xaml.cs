@@ -30,6 +30,8 @@ namespace QuranKemenag.Views
         private List<Ayat> _ayatSaatIni = new();
         private Surah? _surahSaatIni;
         private List<Surah> _daftarSurah = new();
+        private Juz? _juzAktif;
+        private List<Juz> _daftarJuz = new();
 
         // Dipakai lewat x:Bind statis supaya semua kartu di ItemsControl bisa "melihat" status
         // checkbox tampilan tanpa perlu ElementName (yang tidak menembus DataTemplate di WinUI).
@@ -49,9 +51,6 @@ namespace QuranKemenag.Views
 
             UkuranFontGlobal = _fontSize;
 
-            // Ensure default font is set (in case XAML selection hasn't fired yet)
-            // Will be replaced when LoadFontsFromAssetsAsync runs
-
             Loaded += async (s, e) =>
             {
                 await LoadFontsFromAssetsAsync();
@@ -59,6 +58,122 @@ namespace QuranKemenag.Views
             };
         }
 
+        /// <summary>Constructor khusus dibuka dari halaman Per Juz — bisa menampilkan ayat lintas-surah.</summary>
+        /// <summary>Constructor khusus dibuka dari halaman Per Juz — bisa menampilkan ayat lintas-surah.</summary>
+        public AyatReaderView(MainWindow mainWindow, Juz juz)
+        {
+            InitializeComponent();
+            _mainWindow = mainWindow;
+            _juzAktif = juz;
+
+            UkuranFontGlobal = _fontSize;
+
+            Loaded += async (s, e) =>
+            {
+                await LoadFontsFromAssetsAsync();
+                _daftarSurah = await QuranDatabase.AmbilDaftarSurahAsync();
+                _daftarJuz = await QuranDatabase.AmbilDaftarJuzAsync();
+
+                // Toolbar: sembunyikan kontrol per-surah, tampilkan dropdown per-juz sebagai gantinya.
+                CmbSurah.Visibility = Visibility.Collapsed;
+                CmbJuz.Visibility = Visibility.Visible;
+                CmbAyatDari.Visibility = Visibility.Collapsed;
+                TxtSd.Visibility = Visibility.Collapsed;
+                CmbAyatSampai.Visibility = Visibility.Collapsed;
+                BtnTampilkan.Visibility = Visibility.Collapsed;
+
+                CmbJuz.ItemsSource = _daftarJuz;
+                CmbJuz.SelectedValue = juz.Nomor;
+
+                await TampilkanJuzAsync(juz);
+            };
+        }
+
+        private async void CmbJuz_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbJuz.SelectedValue is int nomorJuz)
+            {
+                var juzTerpilih = _daftarJuz.FirstOrDefault(j => j.Nomor == nomorJuz);
+                if (juzTerpilih != null)
+                {
+                    _juzAktif = juzTerpilih;
+                    await TampilkanJuzAsync(juzTerpilih);
+                }
+            }
+        }
+        private async Task TampilkanJuzAsync(Juz juz)
+        {
+
+            var hasil = new List<Ayat>();
+
+            for (int nomorSurah = juz.SurahMulai; nomorSurah <= juz.SurahSelesai; nomorSurah++)
+            {
+                var surahInfo = _daftarSurah.FirstOrDefault(s => s.Nomor == nomorSurah);
+                if (surahInfo == null) continue;
+
+                int dari = nomorSurah == juz.SurahMulai ? juz.AyatMulai : 1;
+                int sampai = nomorSurah == juz.SurahSelesai ? juz.AyatSelesai : surahInfo.JumlahAyat;
+
+                // Banner pembatas nama surah (ditampilkan untuk setiap surah, termasuk yang pertama,
+                // supaya jelas juz ini dimulai dari surah & ayat berapa).
+                var pembatas = BuatPembatasSurah(surahInfo, $"{surahInfo.NamaLatin} ({surahInfo.Arti}) • Ayat {dari}-{sampai}");
+                hasil.Add(pembatas);
+
+
+                var semuaAyatSurahIni = await QuranDatabase.AmbilAyatSurahAsync(nomorSurah);
+                var terpilih = semuaAyatSurahIni.Where(a => a.NomorAyat >= dari && a.NomorAyat <= sampai).ToList();
+
+                foreach (var ayat in terpilih)
+                {
+                    ayat.WarnaBookmark = BookmarkService.SudahDisimpan(nomorSurah, ayat.NomorAyat)
+                        ? new SolidColorBrush(Color.FromArgb(255, 0x1E, 0x71, 0x45))
+                        : new SolidColorBrush(Colors.Transparent);
+                }
+
+                hasil.AddRange(terpilih);
+            }
+
+
+
+            _ayatSaatIni = hasil;
+            _surahSaatIni = _daftarSurah.FirstOrDefault(s => s.Nomor == juz.SurahMulai);
+
+            AyatItemsControl.ItemsSource = null;
+            AyatItemsControl.ItemsSource = _ayatSaatIni;
+
+            // Mode "Per Halaman" (mushaf) belum mendukung tampilan lintas-surah — dikunci ke Per Ayat.
+            bool lintasSurah = juz.SurahMulai != juz.SurahSelesai;
+            CmbModeTampilan.SelectedIndex = 0;
+            CmbModeTampilan.IsEnabled = !lintasSurah;
+        }
+        private static string KeAngkaArabTeks(int angka)
+        {
+            string[] digitArab = { "٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩" };
+            var hasil = new StringBuilder();
+            foreach (char c in angka.ToString()) hasil.Append(digitArab[c - '0']);
+            return hasil.ToString();
+        }
+        private static string KeArabMakkiyahMadaniyah(string tempatTurun)
+        {
+            return tempatTurun.Contains("makk", StringComparison.OrdinalIgnoreCase) ? "مكية" : "مدنية";
+        }
+
+        /// <summary>Membuat entri "pembatas" (banner nama surah + Bismillah) untuk 1 surah.</summary>
+        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang)
+        {
+            bool tampilkanBismillah = surah.Nomor != 1 && surah.Nomor != 9;
+
+            return new Ayat
+            {
+                NomorSurah = surah.Nomor,
+                IsPembatasSurah = true,
+                NamaSurahUntukPembatas = labelRentang,
+                NamaSurahArabUntukPembatas = surah.NamaArab,
+                TempatTurunUntukPembatas = KeArabMakkiyahMadaniyah(surah.TempatTurun),
+                JumlahAyatArabUntukPembatas = KeAngkaArabTeks(surah.JumlahAyat),
+                TampilkanBismillah = tampilkanBismillah
+            };
+        }
         private async Task InisialisasiAsync(int nomorSurahAwal, int ayatMulai)
         {
             _daftarSurah = await QuranDatabase.AmbilDaftarSurahAsync();
@@ -123,10 +238,23 @@ namespace QuranKemenag.Views
 
                 if (CmbJenisFont.Items.Count > 0)
                 {
-                    CmbJenisFont.SelectedIndex = 0;
-                    if (CmbJenisFont.SelectedItem is ComboBoxItem first && first.Tag is string firstUri)
+                    // Cari font LPMQ Isep Misbah untuk dijadikan default; kalau tidak ketemu, pakai yang pertama.
+                    int indeksDefault = 0;
+                    for (int i = 0; i < CmbJenisFont.Items.Count; i++)
                     {
-                        try { SelectedFontFamily = new FontFamily(firstUri); } catch { }
+                        if (CmbJenisFont.Items[i] is ComboBoxItem itemCek &&
+                            itemCek.Content is string namaFont &&
+                            namaFont.Contains("LPMQ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            indeksDefault = i;
+                            break;
+                        }
+                    }
+
+                    CmbJenisFont.SelectedIndex = indeksDefault;
+                    if (CmbJenisFont.SelectedItem is ComboBoxItem terpilih && terpilih.Tag is string uriTerpilih)
+                    {
+                        try { SelectedFontFamily = new FontFamily(uriTerpilih); } catch { }
                     }
                 }
 
@@ -207,6 +335,14 @@ namespace QuranKemenag.Views
                         ? new SolidColorBrush(Color.FromArgb(255, 0x1E, 0x71, 0x45))
                         : new SolidColorBrush(Colors.Transparent);
                 }
+
+                // Banner nama surah + Bismillah cuma muncul kalau tampilan dimulai dari ayat 1
+                // (bukan pas user pilih rentang custom yang tidak menyertakan ayat pertama).
+                if (dari == 1 && _surahSaatIni != null)
+                {
+                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat");
+                    _ayatSaatIni.Insert(0, pembatas);
+                }
             }
 
             AyatItemsControl.ItemsSource = null;
@@ -264,7 +400,10 @@ namespace QuranKemenag.Views
 
         private void Kembali_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.NavSurahDariHalamanLain();
+            if (_juzAktif != null)
+                _mainWindow.NavJuzDariHalamanLain();
+            else
+                _mainWindow.NavSurahDariHalamanLain();
         }
 
         private void FontTambah_Click(object sender, RoutedEventArgs e)
@@ -306,32 +445,94 @@ namespace QuranKemenag.Views
             AyatItemsControl.ItemsSource = data;
         }
 
-        private void SalinKePapanKlip(string teks)
+        private void SalinKePapanKlip(string teksPolos, string rtf)
         {
             var paket = new DataPackage();
-            paket.SetText(teks);
+            paket.SetText(teksPolos);
+            paket.SetRtf(rtf);
             Clipboard.SetContent(paket);
         }
 
         private void SalinAyat_Click(object sender, RoutedEventArgs e)
         {
-            if (_ayatSaatIni.Count == 0) return;
-            var sb = new StringBuilder();
-            foreach (var a in _ayatSaatIni) sb.AppendLine(a.TeksArab);
-            SalinKePapanKlip(sb.ToString());
+            var daftar = _ayatSaatIni.Where(a => !a.IsPembatasSurah).ToList();
+            if (daftar.Count == 0) return;
+
+            var teksPolos = new StringBuilder();
+            foreach (var a in daftar) teksPolos.AppendLine(a.TeksArab);
+
+            SalinKePapanKlip(teksPolos.ToString(), BangunRtfAyat(daftar, sertakanTerjemah: false));
         }
 
         private void SalinDenganTerjemah_Click(object sender, RoutedEventArgs e)
         {
-            if (_ayatSaatIni.Count == 0) return;
-            var sb = new StringBuilder();
-            foreach (var a in _ayatSaatIni)
+            var daftar = _ayatSaatIni.Where(a => !a.IsPembatasSurah).ToList();
+            if (daftar.Count == 0) return;
+
+            var teksPolos = new StringBuilder();
+            foreach (var a in daftar)
             {
-                sb.AppendLine(a.TeksArab);
-                sb.AppendLine(a.Terjemah);
-                sb.AppendLine();
+                teksPolos.AppendLine(a.TeksArab);
+                teksPolos.AppendLine(a.Terjemah);
+                teksPolos.AppendLine();
             }
-            SalinKePapanKlip(sb.ToString());
+
+            SalinKePapanKlip(teksPolos.ToString(), BangunRtfAyat(daftar, sertakanTerjemah: true));
+        }
+
+        /// <summary>
+        /// Membangun dokumen RTF supaya font LPMQ Isep Misbah (dan arah teks RTL) ikut
+        /// terbawa saat ayat di-paste ke Word/aplikasi lain — plain text saja tidak bisa bawa info font.
+        /// </summary>
+        private string BangunRtfAyat(List<Ayat> daftar, bool sertakanTerjemah)
+        {
+            var sb = new StringBuilder();
+            sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033");
+            sb.Append(@"{\fonttbl{\f0 LPMQ Isep Misbah;}{\f1 Calibri;}}");
+            sb.Append(@"\viewkind4\uc1");
+
+            int fsArab = _fontSize * 2; // satuan RTF: half-point
+
+            foreach (var ayat in daftar)
+            {
+                sb.Append(@"\pard\rtlpar\qr\rtlch\f0\fs").Append(fsArab).Append(' ');
+                sb.Append(KeRtfUnicode(ayat.TeksArab));
+                sb.Append(@"\par");
+
+                if (sertakanTerjemah && !string.IsNullOrWhiteSpace(ayat.Terjemah))
+                {
+                    sb.Append(@"\pard\ltrpar\ql\ltrch\f1\fs22 ");
+                    sb.Append(KeRtfUnicode(ayat.Terjemah));
+                    sb.Append(@"\par");
+                }
+
+                sb.Append(@"\par");
+            }
+
+            sb.Append('}');
+            return sb.ToString();
+        }
+
+        /// <summary>Escape karakter khusus RTF dan ubah tiap karakter non-ASCII (Arab, dsb) jadi kode \u RTF.</summary>
+        private static string KeRtfUnicode(string teks)
+        {
+            var sb = new StringBuilder();
+            foreach (char c in teks)
+            {
+                if (c == '\\' || c == '{' || c == '}')
+                {
+                    sb.Append('\\').Append(c);
+                }
+                else if (c < 128)
+                {
+                    sb.Append(c);
+                }
+                else
+                {
+                    sb.Append(@"\u").Append((int)c).Append('?');
+                }
+            }
+            return sb.ToString();
         }
 
         private async Task<bool> AdaAyatUntukEksporAsync()
@@ -466,23 +667,22 @@ namespace QuranKemenag.Views
 
         private void BookmarkAyat_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is int nomorAyat && _surahSaatIni != null)
+            if (sender is Button btn && btn.Tag is Ayat ayat && !ayat.IsPembatasSurah)
             {
-                BookmarkService.Toggle(_surahSaatIni.Nomor, nomorAyat, _surahSaatIni.NamaLatin);
+                string namaSurah = _daftarSurah.FirstOrDefault(s => s.Nomor == ayat.NomorSurah)?.NamaLatin
+                    ?? _surahSaatIni?.NamaLatin ?? "";
 
-                var ayat = _ayatSaatIni.FirstOrDefault(a => a.NomorAyat == nomorAyat);
-                if (ayat != null)
-                {
-                    ayat.WarnaBookmark = BookmarkService.SudahDisimpan(_surahSaatIni.Nomor, nomorAyat)
-                        ? new SolidColorBrush(Color.FromArgb(255, 0x1E, 0x71, 0x45))
-                        : new SolidColorBrush(Colors.Transparent);
+                BookmarkService.Toggle(ayat.NomorSurah, ayat.NomorAyat, namaSurah);
 
-                    SegarkanKartuAyat();
-                }
+                ayat.WarnaBookmark = BookmarkService.SudahDisimpan(ayat.NomorSurah, ayat.NomorAyat)
+                    ? new SolidColorBrush(Color.FromArgb(255, 0x1E, 0x71, 0x45))
+                    : new SolidColorBrush(Colors.Transparent);
+
+                SegarkanKartuAyat();
             }
         }
 
-        
+
 
         private bool _pengaturanTersembunyi = false;
 

@@ -18,6 +18,20 @@ namespace QuranKemenag.Models
 
         // Properti bantu untuk binding Visibility di XAML
         public Visibility HasCatatanKaki => string.IsNullOrEmpty(CatatanKaki) ? Visibility.Collapsed : Visibility.Visible;
+
+        // ===== Dipakai khusus untuk tampilan "Per Juz" yang bisa menyambung lintas-surah =====
+        // Entri "pembatas" ini bukan ayat sungguhan — cuma banner nama surah yang disisipkan
+        // di antara ayat, muncul saat rentang juz pindah dari 1 surah ke surah berikutnya.
+        public bool IsPembatasSurah { get; set; } = false;
+        public string NamaSurahUntukPembatas { get; set; } = string.Empty;
+        public string NamaSurahArabUntukPembatas { get; set; } = string.Empty;
+        public string TempatTurunUntukPembatas { get; set; } = string.Empty;
+        public string JumlahAyatArabUntukPembatas { get; set; } = string.Empty;
+        public bool TampilkanBismillah { get; set; } = false;
+
+        public Visibility VisibilitasDivider => IsPembatasSurah ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibilitasAyatBiasa => IsPembatasSurah ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility VisibilitasBismillah => TampilkanBismillah ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public class Juz

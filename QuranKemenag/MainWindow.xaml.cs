@@ -1,6 +1,6 @@
 using Microsoft.UI.Xaml;
 using QuranKemenag.Views;
-
+using QuranKemenag.Models;
 namespace QuranKemenag
 {
     public sealed partial class MainWindow : Window
@@ -65,6 +65,13 @@ namespace QuranKemenag
         {
             UncheckSemuaNavSidebar();
             MainContent.Content = new AyatReaderView(this, nomorSurah, ayatMulai);
+            HeaderTitle.Text = "Baca Ayat";
+        }
+
+        public void BukaAyatReaderJuz(Juz juz)
+        {
+            UncheckSemuaNavSidebar();
+            MainContent.Content = new AyatReaderView(this, juz);
             HeaderTitle.Text = "Baca Ayat";
         }
 

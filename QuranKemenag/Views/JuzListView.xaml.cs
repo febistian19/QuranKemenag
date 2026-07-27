@@ -41,7 +41,7 @@ namespace QuranKemenag.Views
         {
             if (sender is FrameworkElement fe && fe.Tag is Juz juz)
             {
-                _mainWindow.BukaAyatReader(juz.SurahMulai, juz.AyatMulai);
+                _mainWindow.BukaAyatReaderJuz(juz);
             }
         }
 
