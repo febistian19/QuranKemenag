@@ -189,8 +189,8 @@
                                                Visibility="{x:Bind local:AyatReaderView.TampilkanLatinGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}" />
 
                                     <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
-                                                Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}">
-                                        <!--<TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />-->
+                                                Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />
                                         <TextBlock Text="{x:Bind Terjemah}" TextWrapping="Wrap" Margin="0,3,0,0" FontSize="13.5" Foreground="{StaticResource TextPrimaryBrush}" />
 
                                             <Button HorizontalAlignment="Right" Margin="0,10,0,0"
