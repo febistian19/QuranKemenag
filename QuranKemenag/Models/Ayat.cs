@@ -8,6 +8,7 @@ namespace QuranKemenag.Models
     {
         public int NomorSurah { get; set; }
         public int NomorAyat { get; set; }
+        public int Juz { get; set; }   // <-- TAMBAHKAN baris ini
         public string TeksArab { get; set; } = string.Empty;
         public string TeksLatin { get; set; } = string.Empty;
         public string Terjemah { get; set; } = string.Empty;

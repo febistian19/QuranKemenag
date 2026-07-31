@@ -14,24 +14,21 @@ namespace QuranKemenag.Views
     public sealed partial class MushafPageView : UserControl
     {
         // ===== Konfigurasi tiap jenis bingkai: path gambar + margin area putih (di kanvas 640x800) =====
-        // Margin di bawah ini hasil deteksi presisi dari gambar aslinya, bukan tebakan.
-        // Kalau nanti area putih di gambar diganti/direvisi, cukup ubah angka di sini.
-        private record KonfigBingkai(string PathGambar, Thickness Margin, double LebarScrollViewer, double TinggiBaris, double UkuranFont);
+        // TampilkanLabelGable: true kalau bingkai ini perlu label nama surah (kiri) & info Juz (kanan)
+        // di-overlay dari code, false kalau teksnya sudah baked-in di gambar (Fatihah & Baqarah).
+        private record KonfigBingkai(string PathGambar, Thickness Margin, double LebarScrollViewer,
+                                      double TinggiBaris, double UkuranFont, bool TampilkanLabelGable);
 
         private static readonly KonfigBingkai BingkaiGenerik =
-            new("/Resources/Images/iluminasi.png", new Thickness(120, 195, 145, 65), 375, 42, 23);
+            new("/Resources/Images/iluminasi.png", new Thickness(120, 195, 145, 65), 375, 42, 23, true);
 
-        // LineHeight dibuat jauh lebih lebar (76) khusus halaman ini, karena isinya selalu tetap
-        // (7 ayat pendek) — supaya teksnya meregang mengisi penuh tinggi bingkai, bukan menumpuk di atas.
         private static readonly KonfigBingkai BingkaiFatihah =
-            new("/Resources/Images/iluminasi-fatihah.png", new Thickness(129, 175, 119, 168), 392, 76, 26);
+            new("/Resources/Images/iluminasi-fatihah.png", new Thickness(129, 175, 119, 168), 392, 76, 26, false);
 
         private static readonly KonfigBingkai BingkaiBaqarah =
-            new("/Resources/Images/iluminasi-baqarah.png", new Thickness(119, 161, 113, 167), 408, 75, 25);
+            new("/Resources/Images/iluminasi-baqarah.png", new Thickness(119, 161, 113, 167), 408, 75, 25, false);
 
         // ===== Perkiraan kapasitas 1 halaman (jumlah karakter teks Arab) =====
-        // Belum ada data resmi pembagian 15-baris Kemenag, jadi ini estimasi berdasarkan
-        // ukuran area putih & font. Kalau halaman terasa terlalu penuh/kosong, sesuaikan angka ini.
         private const int KapasitasGenerik = 600;
         private const int KapasitasFatihah = 530;
         private const int KapasitasBaqarah = 350;
@@ -50,11 +47,6 @@ namespace QuranKemenag.Views
             TampilkanHalaman(0);
         }
 
-        /// <summary>
-        /// Membagi daftar ayat jadi beberapa "halaman" berdasarkan perkiraan kapasitas bingkai.
-        /// Halaman pertama Al-Fatihah & Al-Baqarah pakai bingkai & kapasitas khusus;
-        /// selain itu (dan halaman ke-2 dst) pakai bingkai generik.
-        /// </summary>
         private static List<List<Ayat>> BagiJadiHalaman(int nomorSurah, List<Ayat> daftarAyat)
         {
             var hasil = new List<List<Ayat>>();
@@ -66,10 +58,6 @@ namespace QuranKemenag.Views
                 int indeksHalamanCalon = hasil.Count;
                 int kapasitas = AmbilKapasitas(nomorSurah, indeksHalamanCalon);
 
-                // Baru pindah ke halaman baru kalau halaman SEKARANG sudah penuh/lewat kapasitas.
-                // Jadi halaman selalu diisi SAMPAI penuh dulu, baru berpindah — walau akibatnya
-                // kadang sedikit "meluber" karena 1 ayat panjang, itu lebih baik daripada
-                // menyisakan banyak ruang kosong di halaman sebelumnya.
                 if (halamanBerjalan.Count > 0 && panjangBerjalan >= kapasitas)
                 {
                     hasil.Add(halamanBerjalan);
@@ -111,9 +99,27 @@ namespace QuranKemenag.Views
             ImgBingkai.Source = new BitmapImage(new Uri("ms-appx://" + konfig.PathGambar));
             GridKontenAyat.Margin = konfig.Margin;
             SvTeksMushaf.Width = konfig.LebarScrollViewer;
-            TeksMushaf.Width = konfig.LebarScrollViewer - 30; // dikurangi padding kiri+kanan ScrollViewer
+            TeksMushaf.Width = konfig.LebarScrollViewer - 30;
             TeksMushaf.LineHeight = konfig.TinggiBaris;
             TeksMushaf.FontSize = konfig.UkuranFont;
+
+            // ===== Label gable: nama surah (kiri) & info Juz (kanan) =====
+            // Cuma ditampilkan untuk bingkai generik; Fatihah & Baqarah sudah punya teks baked-in di gambarnya.
+            if (konfig.TampilkanLabelGable)
+            {
+                TxtNamaSurahArab.Text = _surah.NamaArab;
+
+                int juzHalamanIni = _halaman[indeks].Count > 0 ? _halaman[indeks][0].Juz : 0;
+                TxtInfoBawah.Text = juzHalamanIni > 0 ? $"الجزء {KeAngkaArab(juzHalamanIni)}" : "";
+
+                TxtNamaSurahArab.Visibility = Visibility.Visible;
+                TxtInfoBawah.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TxtNamaSurahArab.Visibility = Visibility.Collapsed;
+                TxtInfoBawah.Visibility = Visibility.Collapsed;
+            }
 
             ParagrafMushaf.Inlines.Clear();
             foreach (var ayat in _halaman[indeks])
@@ -138,9 +144,6 @@ namespace QuranKemenag.Views
 
         private void BtnSelanjutnya_Click(object sender, RoutedEventArgs e) => TampilkanHalaman(_halamanSaatIni + 1);
 
-        /// <summary>
-        /// Membuat penanda akhir ayat bergaya mushaf: lingkaran berisi nomor ayat Arab.
-        /// </summary>
         private static Border BuatPenandaAyat(int nomorAyat)
         {
             var teks = new TextBlock
@@ -163,7 +166,6 @@ namespace QuranKemenag.Views
             };
         }
 
-        /// <summary>Mengonversi angka biasa ke angka Arab (٠١٢٣٤٥٦٧٨٩) untuk gaya mushaf.</summary>
         private static string KeAngkaArab(int angka)
         {
             string[] digitArab = { "٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩" };

@@ -116,7 +116,7 @@ namespace QuranKemenag.Views
 
                 // Banner pembatas nama surah (ditampilkan untuk setiap surah, termasuk yang pertama,
                 // supaya jelas juz ini dimulai dari surah & ayat berapa).
-                var pembatas = BuatPembatasSurah(surahInfo, $"{surahInfo.NamaLatin} ({surahInfo.Arti}) • Ayat {dari}-{sampai}");
+                var pembatas = BuatPembatasSurah(surahInfo, $"{surahInfo.NamaLatin} ({surahInfo.Arti}) • Ayat {dari}-{sampai}", dari);
                 hasil.Add(pembatas);
 
 
@@ -159,9 +159,12 @@ namespace QuranKemenag.Views
         }
 
         /// <summary>Membuat entri "pembatas" (banner nama surah + Bismillah) untuk 1 surah.</summary>
-        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang)
+        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang, int ayatMulaiTampil)
         {
-            bool tampilkanBismillah = surah.Nomor != 1 && surah.Nomor != 9;
+            // Bismillah cuma tampil kalau ayat yang ditampilkan benar-benar dimulai dari ayat 1
+            // surah tersebut (bukan cuma karena kebetulan surah ini "muncul" di tengah rentang juz),
+            // dan dikecualikan untuk Al-Fatihah & At-Taubah.
+            bool tampilkanBismillah = surah.Nomor != 1 && surah.Nomor != 9 && ayatMulaiTampil == 1;
 
             return new Ayat
             {
@@ -170,7 +173,7 @@ namespace QuranKemenag.Views
                 NamaSurahUntukPembatas = labelRentang,
                 NamaSurahArabUntukPembatas = surah.NamaArab,
                 TempatTurunUntukPembatas = KeArabMakkiyahMadaniyah(surah.TempatTurun),
-                JumlahAyatArabUntukPembatas = KeAngkaArabTeks(surah.JumlahAyat),
+                JumlahAyatArabUntukPembatas = $"آياتها {KeAngkaArabTeks(surah.JumlahAyat)}",
                 TampilkanBismillah = tampilkanBismillah
             };
         }
@@ -340,7 +343,7 @@ namespace QuranKemenag.Views
                 // (bukan pas user pilih rentang custom yang tidak menyertakan ayat pertama).
                 if (dari == 1 && _surahSaatIni != null)
                 {
-                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat");
+                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat", 1);
                     _ayatSaatIni.Insert(0, pembatas);
                 }
             }
@@ -425,9 +428,9 @@ namespace QuranKemenag.Views
         private void ChkTampilan_Changed(object sender, RoutedEventArgs e)
         {
             // Guard: dipanggil juga saat InitializeComponent() sebelum semua checkbox dibuat.
-            if (ChkAyat == null || ChkLatin == null || ChkTerjemah == null) return;
+            if (/*ChkAyat == null || */ChkLatin == null || ChkTerjemah == null) return;
 
-            TampilkanAyatGlobal = ChkAyat.IsChecked == true;
+            //TampilkanAyatGlobal = ChkAyat.IsChecked == true;
             TampilkanLatinGlobal = ChkLatin.IsChecked == true;
             TampilkanTerjemahGlobal = ChkTerjemah.IsChecked == true;
             SegarkanKartuAyat();
@@ -573,7 +576,7 @@ namespace QuranKemenag.Views
                     WordInteropService.SisipkanKeDokumenAktif(
                         judulSurah: JudulSurahUntukEkspor(),
                         daftarAyat: _ayatSaatIni,
-                        tampilkanAyat: ChkAyat.IsChecked == true,
+                        //tampilkanAyat: ChkAyat.IsChecked == true,
                         tampilkanLatin: ChkLatin.IsChecked == true,
                         tampilkanTerjemah: ChkTerjemah.IsChecked == true,
                         ukuranFontArab: _fontSize
@@ -602,7 +605,7 @@ namespace QuranKemenag.Views
                     filePath: file.Path,
                     judulSurah: JudulSurahUntukEkspor(),
                     daftarAyat: _ayatSaatIni,
-                    tampilkanAyat: ChkAyat.IsChecked == true,
+                    //tampilkanAyat: ChkAyat.IsChecked == true,
                     tampilkanLatin: ChkLatin.IsChecked == true,
                     tampilkanTerjemah: ChkTerjemah.IsChecked == true,
                     ukuranFontArab: _fontSize

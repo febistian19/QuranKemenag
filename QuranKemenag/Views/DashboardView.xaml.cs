@@ -27,7 +27,7 @@ namespace QuranKemenag.Views
             _mainWindow = mainWindow;
 
             var semuaBookmark = BookmarkService.AmbilSemua();
-            BookmarkList.ItemsSource = semuaBookmark.Select(b => new BookmarkTampil
+            BookmarkList.ItemsSource = semuaBookmark.Take(3).Select(b => new BookmarkTampil
             {
                 NomorSurah = b.NomorSurah,
                 NomorAyat = b.NomorAyat,
@@ -51,6 +51,14 @@ namespace QuranKemenag.Views
             {
                 _mainWindow.BukaAyatReader(bt.NomorSurah, bt.NomorAyat);
             }
+        }
+
+        private void ToggleBookmark_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            bool sedangTertutup = PanelBookmarkKonten.Visibility == Visibility.Collapsed;
+
+            PanelBookmarkKonten.Visibility = sedangTertutup ? Visibility.Visible : Visibility.Collapsed;
+            IconToggleBookmark.Glyph = sedangTertutup ? "\uE70E" : "\uE70D"; // ChevronUp saat terbuka, ChevronDown saat tertutup
         }
     }
 }

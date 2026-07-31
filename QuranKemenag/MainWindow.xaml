@@ -57,7 +57,7 @@
                                 FontWeight="SemiBold"
                                 Foreground="{StaticResource TextPrimaryBrush}"/>
 
-                            <TextBlock Text="Versi Desktop"
+                            <TextBlock Text="Windows"
                                 FontSize="11"
                                 Foreground="{StaticResource TextSecondaryBrush}"/>
 

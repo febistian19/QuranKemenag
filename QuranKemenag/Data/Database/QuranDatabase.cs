@@ -70,7 +70,7 @@ namespace QuranKemenag.Data.Database
 
             var cmd = koneksi.CreateCommand();
             cmd.CommandText = """
-                SELECT q.ayat, q.teks, t.teks AS terjemah, t.footnote
+                SELECT q.ayat, q.isyarat, t.teks AS terjemah, t.footnote, q.juz
                 FROM quran q
                 LEFT JOIN terjemah_id t ON t.surah = q.surah AND t.ayat = q.ayat
                 WHERE q.surah = $nomor
@@ -91,6 +91,7 @@ namespace QuranKemenag.Data.Database
                     TeksLatin = "",       // masih belum tersedia di database ini
                     Terjemah = BersihkanPenandaCatatanKaki(reader.IsDBNull(2) ? "" : reader.GetString(2)),
                     CatatanKaki = string.IsNullOrWhiteSpace(footnote) ? null : footnote,
+                    Juz = reader.GetInt32(4),
                 });
             }
 

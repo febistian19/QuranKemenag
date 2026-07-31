@@ -31,6 +31,21 @@
                         </RichTextBlock>
                     </ScrollViewer>
                 </Grid>
+
+                <!-- Layer 3: label gable — nama surah (kiri) & info Juz (kanan).
+                     Cuma dipakai untuk bingkai generik; disembunyikan untuk Fatihah/Baqarah
+                     karena teksnya sudah baked-in di gambar mereka. -->
+                <TextBlock x:Name="TxtNamaSurahArab"
+           FontFamily="Traditional Arabic" FontSize="15"
+           Foreground="#7A2E12" TextAlignment="Right"
+           MaxWidth="200" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+           HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,82,0,0" />
+
+                <TextBlock x:Name="TxtInfoBawah"
+           FontFamily="Traditional Arabic" FontSize="15"
+           Foreground="#7A2E12" TextAlignment="Left"
+           MaxWidth="200" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+           HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,82,60,0" />
             </Grid>
         </Viewbox>
 
@@ -53,9 +68,5 @@
                 </Button>
             </StackPanel>
         </Border>
-
-        <!-- Dipertahankan supaya code-behind lama tidak error; tidak dirender (judul sudah ada di gambar bingkai) -->
-        <TextBlock x:Name="TxtNamaSurahArab" Visibility="Collapsed" />
-        <TextBlock x:Name="TxtInfoBawah" Visibility="Collapsed" />
     </Grid>
 </UserControl>

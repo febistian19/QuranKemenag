@@ -122,7 +122,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Kategori Makkiyah/Madaniyah, slot kiri -->
-                                            <TextBlock Grid.Column="0" Text="{x:Bind TempatTurunUntukPembatas}" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28"
+                                            <TextBlock Grid.Column="0" Text="{x:Bind JumlahAyatArabUntukPembatas}" FontFamily="Traditional Arabic" FontSize="35"
                                                        Foreground="{StaticResource PrimaryGreenDarkBrush}" FlowDirection="RightToLeft"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -134,8 +134,8 @@
                                             <!-- Jumlah ayat, slot kanan -->
                                             <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <TextBlock Text="آياتها " FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
-                                                <TextBlock Text="{x:Bind JumlahAyatArabUntukPembatas}" FontFamily="Traditional Arabic" FontSize="28" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
+                                                <!--<TextBlock Text="آياتها " FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" Foreground="{StaticResource PrimaryGreenDarkBrush}" />-->
+                                                <TextBlock Text="{x:Bind TempatTurunUntukPembatas}" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
                                             </StackPanel>
                                         </Grid>
                                     </Grid>
@@ -170,34 +170,34 @@
                                     </Grid>
 
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
-                                       FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneWay}" HorizontalAlignment="Stretch"
+                                       FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" HorizontalAlignment="Stretch"
                                        TextAlignment="Justify"
                                        FlowDirection="RightToLeft" TextWrapping="Wrap" LineHeight="46"
                                        Foreground="{StaticResource TextPrimaryBrush}"
-                                       FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneWay}"
-                                       Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+                                       FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneTime}"
+                                       Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}" />
 
                                     <!-- Tombol bookmark --><!--
                                     <Button Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="8,0,0,0"
                                             Background="Transparent" BorderThickness="0"
                                             Tag="{x:Bind NomorAyat}" Click="BookmarkAyat_Click">
-                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="16" Foreground="{x:Bind WarnaBookmark, Mode=OneWay}" />
+                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" FontSize="16" Foreground="{x:Bind WarnaBookmark, Mode=OneTime}" />
                                     </Button>-->
 
                                     <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{x:Bind TeksLatin}"
                                                FontSize="15" Foreground="{StaticResource GoldBrush}" FontStyle="Italic" Margin="0,12,0,0" TextWrapping="Wrap"
-                                               Visibility="{x:Bind local:AyatReaderView.TampilkanLatinGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+                                               Visibility="{x:Bind local:AyatReaderView.TampilkanLatinGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}" />
 
                                     <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
-                                                Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}">
-                                        <TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />
+                                                Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}">
+                                        <!--<TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />-->
                                         <TextBlock Text="{x:Bind Terjemah}" TextWrapping="Wrap" Margin="0,3,0,0" FontSize="13.5" Foreground="{StaticResource TextPrimaryBrush}" />
 
                                             <Button HorizontalAlignment="Right" Margin="0,10,0,0"
                                                 Background="Transparent" BorderThickness="0" Padding="4"
                                                 Tag="{x:Bind}" Click="BookmarkAyat_Click">
                                                 <Polygon Points="2,1 14,1 14,19 8,14 2,19"
-                                                 Fill="{x:Bind WarnaBookmark, Mode=OneWay}"
+                                                 Fill="{x:Bind WarnaBookmark, Mode=OneTime}"
                                                  Stroke="{StaticResource PrimaryGreenBrush}" StrokeThickness="1"
                                                  Width="14" Height="18" Stretch="Uniform" />
                                         </Button>
@@ -240,9 +240,9 @@
                     <!-- Checkbox mode Per Ayat -->
                     <StackPanel x:Name="PanelCentangPerAyat">
                         <TextBlock Text="Tampilkan" FontWeight="SemiBold" FontSize="12.5" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
-                        <CheckBox x:Name="ChkAyat" Content="Ayat" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
+                        <!--<CheckBox x:Name="ChkAyat" Content="Ayat" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />-->
                         <CheckBox x:Name="ChkTerjemah" Content="Terjemah" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
-                        <CheckBox x:Name="ChkLatin" Content="Latin" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
+                        <CheckBox x:Name="ChkLatin" Content="Translitasi" IsChecked="True" Margin="0,5" Checked="ChkTampilan_Changed" Unchecked="ChkTampilan_Changed" />
                     </StackPanel>
 
                     <!-- Checkbox mode Per Halaman (Mushaf) -->
@@ -261,7 +261,10 @@
 
                     <TextBlock Text="Terjemah Bahasa" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
                     <ComboBox SelectedIndex="0" HorizontalAlignment="Stretch">
-                        <ComboBoxItem Content="ID — Indonesia" />
+                        <ComboBoxItem Content="Indonesia 2019" />
+                        <ComboBoxItem Content="Bahasa Banyumas" />
+                        <ComboBoxItem Content="Bahasa Sunda" />
+                        <ComboBoxItem Content="Bahasa Gayo" />
                     </ComboBox>
 
                     <!-- Ukuran font hanya relevan di mode Per Ayat -->

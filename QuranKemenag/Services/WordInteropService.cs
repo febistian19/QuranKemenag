@@ -47,7 +47,7 @@ namespace QuranKemenag.Services
         public static void SisipkanKeDokumenAktif(
     string judulSurah,
     List<Models.Ayat> daftarAyat,
-    bool tampilkanAyat, bool tampilkanLatin, bool tampilkanTerjemah,
+    /*bool tampilkanAyat,*/ bool tampilkanLatin, bool tampilkanTerjemah,
     int ukuranFontArab)
         {
             dynamic? app = DapatkanWordAktif() ?? throw new InvalidOperationException("Word tidak sedang terbuka.");
@@ -68,7 +68,7 @@ namespace QuranKemenag.Services
 
                 foreach (var ayat in daftarAyat)
                 {
-                    if (tampilkanAyat && !string.IsNullOrWhiteSpace(ayat.TeksArab))
+                    if (/*tampilkanAyat && */!string.IsNullOrWhiteSpace(ayat.TeksArab))
                     {
                         sel.ParagraphFormat.Alignment = wdAlignParagraphRight;
                         sel.Font.Name = "LPMQ Isep Misbah";
