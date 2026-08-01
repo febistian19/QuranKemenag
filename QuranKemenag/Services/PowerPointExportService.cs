@@ -9,12 +9,6 @@ using QuranKemenag.Models;
 
 namespace QuranKemenag.Services
 {
-    /// <summary>
-    /// Mengekspor ayat ke berkas PowerPoint (.pptx) — satu slide judul + satu slide per ayat.
-    /// Dibangun langsung sebagai paket OPC (ZIP + XML) mengikuti struktur minimal .pptx yang valid,
-    /// tanpa bergantung pada API DocumentFormat.OpenXml.Presentation yang jauh lebih kompleks
-    /// dibanding API Wordprocessing. Tidak butuh Microsoft PowerPoint terpasang untuk membuatnya.
-    /// </summary>
     public static class PowerPointExportService
     {
         private const int LebarSlide = 12192000;  // EMU, 16:9
@@ -25,9 +19,11 @@ namespace QuranKemenag.Services
             string judulSurah,
             IEnumerable<Ayat> daftarAyat,
             bool tampilkanLatin = true,
-            bool tampilkanTerjemah = true)
+            bool tampilkanTerjemah = true,
+            string namaFontArab = "LPMQ Isep Misbah")
         {
-            var ayatList = daftarAyat.ToList();
+            // Slide Bismillah/banner surah dihilangkan total dari ekspor — hanya ayat yang diekspor.
+            var ayatList = daftarAyat.Where(a => !a.IsPembatasSurah).ToList();
 
             if (File.Exists(filePath)) File.Delete(filePath);
 
@@ -56,7 +52,7 @@ namespace QuranKemenag.Services
             {
                 int nomorSlide = i + 2;
                 TulisEntri(zip, $"ppt/slides/slide{nomorSlide}.xml",
-                    BuatSlideAyat(ayatList[i], tampilkanLatin, tampilkanTerjemah));
+                    BuatSlideAyat(ayatList[i], tampilkanLatin, tampilkanTerjemah, namaFontArab));
                 TulisEntri(zip, $"ppt/slides/_rels/slide{nomorSlide}.xml.rels", SlideRels);
             }
         }
@@ -159,11 +155,11 @@ namespace QuranKemenag.Services
         }
 
         // ============================ Slide per ayat ============================
-        private static string BuatSlideAyat(Ayat ayat, bool tampilkanLatin, bool tampilkanTerjemah)
+        private static string BuatSlideAyat(Ayat ayat, bool tampilkanLatin, bool tampilkanTerjemah, string namaFontArab)
         {
             var paragraf = new StringBuilder();
 
-            paragraf.Append($"""<a:p><a:pPr algn="r" rtl="1"/><a:r><a:rPr lang="ar-SA" sz="3600" b="1"><a:latin typeface="Traditional Arabic"/><a:cs typeface="Traditional Arabic"/><a:solidFill><a:srgbClr val="1F2937"/></a:solidFill></a:rPr><a:t>{EscapeXml(ayat.TeksArab)}</a:t></a:r></a:p>""");
+            paragraf.Append($"""<a:p><a:pPr algn="r" rtl="1"/><a:r><a:rPr lang="ar-SA" sz="3600" b="1"><a:latin typeface="{EscapeXml(namaFontArab)}"/><a:cs typeface="{EscapeXml(namaFontArab)}"/><a:solidFill><a:srgbClr val="1F2937"/></a:solidFill></a:rPr><a:t>{EscapeXml(ayat.TeksArab)}</a:t></a:r></a:p>""");
 
             if (tampilkanLatin && !string.IsNullOrEmpty(ayat.TeksLatin))
             {

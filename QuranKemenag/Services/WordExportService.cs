@@ -15,7 +15,6 @@ namespace QuranKemenag.Services
 {
     public static class WordExportService
     {
-        private const string FontArab = "LPMQ Isep Misbah";
         private const string FontLatin = "Segoe UI";
         private const string WarnaHijau = "1E7145";
         private const string WarnaEmas = "C9A227";
@@ -28,7 +27,8 @@ namespace QuranKemenag.Services
             bool tampilkanAyat = true,
             bool tampilkanLatin = true,
             bool tampilkanTerjemah = true,
-            int ukuranFontArab = 28)
+            int ukuranFontArab = 28,
+            string namaFontArab = "LPMQ Isep Misbah")
         {
             using var dokumen = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document);
 
@@ -41,8 +41,21 @@ namespace QuranKemenag.Services
 
             foreach (var ayat in daftarAyat)
             {
+                // Entri "pembatas surah" (banner nama surah + Bismillah) tidak punya nomor ayat
+                // dan tidak punya teks ayat biasa — dirender terpisah, jangan lewat BuatParagrafArab.
+                if (ayat.IsPembatasSurah)
+                {
+                    body.Append(BuatParagrafNamaSurah(ayat.NamaSurahUntukPembatas));
+
+                    if (ayat.TampilkanBismillah)
+                        body.Append(BuatParagrafBismillah(namaFontArab, ukuranFontArab));
+
+                    body.Append(BuatParagrafKosong());
+                    continue;
+                }
+
                 if (tampilkanAyat)
-                    body.Append(BuatParagrafArab(ayat, ukuranFontArab));
+                    body.Append(BuatParagrafArab(ayat, ukuranFontArab, namaFontArab));
 
                 if (tampilkanLatin)
                     body.Append(BuatParagrafLatin(ayat));
@@ -83,7 +96,44 @@ namespace QuranKemenag.Services
             );
         }
 
-        private static Paragraph BuatParagrafArab(Ayat ayat, int ukuranFont)
+        private static Paragraph BuatParagrafNamaSurah(string namaSurah)
+        {
+            return new Paragraph(
+                new ParagraphProperties(new Justification { Val = JustificationValues.Center }),
+                new Run(
+                    new RunProperties(
+                        new RunFonts { Ascii = FontLatin },
+                        new Bold(),
+                        new FontSize { Val = "24" },
+                        new Color { Val = WarnaHijau }
+                    ),
+                    new Text(namaSurah ?? "")
+                )
+            );
+        }
+
+        private static Paragraph BuatParagrafBismillah(string namaFontArab, int ukuranFont)
+        {
+            string szHalfPoint = (ukuranFont * 2).ToString();
+
+            return new Paragraph(
+                new ParagraphProperties(
+                    new Justification { Val = JustificationValues.Center },
+                    new BiDi()
+                ),
+                new Run(
+                    new RunProperties(
+                        new RunFonts { Ascii = namaFontArab, ComplexScript = namaFontArab, HighAnsi = namaFontArab },
+                        new FontSize { Val = szHalfPoint },
+                        new FontSizeComplexScript { Val = szHalfPoint },
+                        new RightToLeftText()
+                    ),
+                    new Text("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ") { Space = SpaceProcessingModeValues.Preserve }
+                )
+            );
+        }
+
+        private static Paragraph BuatParagrafArab(Ayat ayat, int ukuranFont, string namaFontArab)
         {
             string szHalfPoint = (ukuranFont * 2).ToString();
 
@@ -94,7 +144,7 @@ namespace QuranKemenag.Services
                 ),
                 new Run(
                     new RunProperties(
-                        new RunFonts { Ascii = FontArab, ComplexScript = FontArab, HighAnsi = FontArab },
+                        new RunFonts { Ascii = namaFontArab, ComplexScript = namaFontArab, HighAnsi = namaFontArab },
                         new FontSize { Val = szHalfPoint },
                         new FontSizeComplexScript { Val = szHalfPoint },
                         new RightToLeftText()
@@ -160,7 +210,7 @@ namespace QuranKemenag.Services
                         new FontSize { Val = "16" },
                         new Color { Val = WarnaAbu }
                     ),
-                    new Text("Dihasilkan oleh Qur'an Kemenag Versi Dekstop")
+                    new Text("Dihasilkan oleh Qur'an Kemenag Windows")
                 )
             );
         }

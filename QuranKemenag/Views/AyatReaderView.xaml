@@ -145,9 +145,9 @@
                                                HorizontalAlignment="Center" Margin="0,6,0,0" />
                                     <!-- Bismillah, dilewati untuk Al-Fatihah & At-Taubah -->
                                     <TextBlock Visibility="{x:Bind VisibilitasBismillah}" Text="بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ"
-                                               FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" FontWeight="Bold"
-                                               Foreground="{StaticResource TextPrimaryBrush}" FlowDirection="RightToLeft"
-                                               HorizontalAlignment="Center" Margin="0,20,0,0" />
+                                        FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" FontSize="28" FontWeight="Bold"
+                                        Foreground="{StaticResource TextPrimaryBrush}" FlowDirection="RightToLeft"
+                                        HorizontalAlignment="Center" Margin="0,20,0,0" />
                                 </StackPanel>
 
                                 <Border Visibility="{x:Bind VisibilitasAyatBiasa}" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
@@ -190,9 +190,14 @@
 
                                     <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
                                                 Visibility="{x:Bind local:AyatReaderView.TampilkanTerjemahGlobal, Mode=OneWay, Converter={StaticResource BoolToVis}}">
-                                        <TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />
+                                        <!--<TextBlock Text="TERJEMAH (INDONESIA)" FontWeight="Bold" FontSize="10.5" Foreground="{StaticResource PrimaryGreenBrush}" />-->
                                         <TextBlock Text="{x:Bind Terjemah}" TextWrapping="Wrap" Margin="0,3,0,0" FontSize="13.5" Foreground="{StaticResource TextPrimaryBrush}" />
 
+                                            <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
+                                                Visibility="{x:Bind HasCatatanKaki}">
+                                                <TextBlock Text="CATATAN KAKI" FontWeight="Bold" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind CatatanKaki}" TextWrapping="Wrap" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" />
+                                            </StackPanel>
                                             <Button HorizontalAlignment="Right" Margin="0,10,0,0"
                                                 Background="Transparent" BorderThickness="0" Padding="4"
                                                 Tag="{x:Bind}" Click="BookmarkAyat_Click">
@@ -200,14 +205,10 @@
                                                  Fill="{x:Bind WarnaBookmark, Mode=OneTime}"
                                                  Stroke="{StaticResource PrimaryGreenBrush}" StrokeThickness="1"
                                                  Width="14" Height="18" Stretch="Uniform" />
-                                        </Button>
+                                            </Button>
                                     </StackPanel>
 
-                                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0"
-                                                Visibility="{x:Bind HasCatatanKaki}">
-                                        <TextBlock Text="CATATAN KAKI" FontWeight="Bold" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" />
-                                        <TextBlock Text="{x:Bind CatatanKaki}" TextWrapping="Wrap" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
+                                    
                                     </Grid>
                                 </Border>
                             </Grid>
@@ -246,12 +247,13 @@
                     </StackPanel>
 
                     <!-- Checkbox mode Per Halaman (Mushaf) -->
-                    <StackPanel x:Name="PanelCentangPerHalaman" Visibility="Collapsed">
+                    <!-- Checkbox mode Per Halaman (Mushaf) -->
+                    <!--<StackPanel x:Name="PanelCentangPerHalaman" Visibility="Collapsed">
                         <TextBlock Text="Tampilkan" FontWeight="SemiBold" FontSize="12.5" Margin="0,0,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
                         <CheckBox Content="Nomor Ayat" IsChecked="True" Margin="0,5" IsEnabled="False" />
                         <CheckBox Content="Tanda Waqaf" Margin="0,5" IsEnabled="False" />
                         <CheckBox Content="Tanda Sajdah" Margin="0,5" IsEnabled="False" />
-                    </StackPanel>
+                    </StackPanel>-->
 
                     <TextBlock Text="Tampilan" FontWeight="SemiBold" FontSize="12.5" Margin="0,18,0,8" Foreground="{StaticResource TextPrimaryBrush}" />
                     <ComboBox x:Name="CmbModeTampilan" SelectedIndex="0" SelectionChanged="CmbModeTampilan_SelectionChanged" HorizontalAlignment="Stretch">

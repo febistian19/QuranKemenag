@@ -146,6 +146,13 @@ namespace QuranKemenag.Views
             CmbModeTampilan.SelectedIndex = 0;
             CmbModeTampilan.IsEnabled = !lintasSurah;
         }
+
+        private static string EkstrakNamaFont(FontFamily fontFamily)
+        {
+            var src = fontFamily.Source;
+            int idx = src.IndexOf('#');
+            return idx >= 0 ? src.Substring(idx + 1) : src;
+        }
         private static string KeAngkaArabTeks(int angka)
         {
             string[] digitArab = { "٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩" };
@@ -369,14 +376,14 @@ namespace QuranKemenag.Views
             // Guard: event ini bisa terpicu saat InitializeComponent() masih berjalan,
             // sebelum semua elemen bernama selesai dibuat.
             if (PanelTeksArab == null || PanelMushaf == null || PanelUkuranFont == null ||
-                PanelCentangPerAyat == null || PanelCentangPerHalaman == null || BtnSalinTerjemah == null) return;
+                PanelCentangPerAyat == null || BtnSalinTerjemah == null) return;
 
             bool mushaf = CmbModeTampilan.SelectedIndex == 1;
 
             PanelTeksArab.Visibility = mushaf ? Visibility.Collapsed : Visibility.Visible;
             PanelMushaf.Visibility = mushaf ? Visibility.Visible : Visibility.Collapsed;
             PanelCentangPerAyat.Visibility = mushaf ? Visibility.Collapsed : Visibility.Visible;
-            PanelCentangPerHalaman.Visibility = mushaf ? Visibility.Visible : Visibility.Collapsed;
+            //PanelCentangPerHalaman.Visibility = mushaf ? Visibility.Visible : Visibility.Collapsed;
             PanelUkuranFont.Visibility = mushaf ? Visibility.Collapsed : Visibility.Visible;
             BtnSalinTerjemah.Visibility = mushaf ? Visibility.Collapsed : Visibility.Visible;
 
@@ -564,9 +571,75 @@ namespace QuranKemenag.Views
             await dialog.ShowAsync();
         }
 
+        private async Task<(int dari, int sampai, bool sertakanTerjemah)?> PilihRentangEksporAsync()
+        {
+            var daftarAyatValid = _ayatSaatIni.Where(a => !a.IsPembatasSurah).ToList();
+            if (daftarAyatValid.Count == 0) return null;
+
+            int minAyat = daftarAyatValid.Min(a => a.NomorAyat);
+            int maxAyat = daftarAyatValid.Max(a => a.NomorAyat);
+
+            var cmbDari = new ComboBox
+            {
+                ItemsSource = Enumerable.Range(minAyat, maxAyat - minAyat + 1).ToList(),
+                SelectedValue = minAyat,
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            var cmbSampai = new ComboBox
+            {
+                ItemsSource = Enumerable.Range(minAyat, maxAyat - minAyat + 1).ToList(),
+                SelectedValue = maxAyat,
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            var chkTerjemah = new CheckBox
+            {
+                Content = "Sertakan Terjemah",
+                IsChecked = true,
+                Margin = new Thickness(0, 8, 0, 0)
+            };
+
+            var panel = new StackPanel { Spacing = 10 };
+            panel.Children.Add(new TextBlock { Text = "Dari Ayat" });
+            panel.Children.Add(cmbDari);
+            panel.Children.Add(new TextBlock { Text = "Sampai Ayat", Margin = new Thickness(0, 8, 0, 0) });
+            panel.Children.Add(cmbSampai);
+            panel.Children.Add(chkTerjemah);
+
+            var dialog = new ContentDialog
+            {
+                Title = "Pilih Rentang Ayat",
+                Content = panel,
+                PrimaryButtonText = "Ekspor",
+                CloseButtonText = "Batal",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = this.XamlRoot
+            };
+
+            var hasil = await dialog.ShowAsync();
+            if (hasil != ContentDialogResult.Primary) return null;
+
+            if (cmbDari.SelectedValue is int dari && cmbSampai.SelectedValue is int sampai)
+            {
+                if (dari > sampai) (dari, sampai) = (sampai, dari);
+                return (dari, sampai, chkTerjemah.IsChecked == true);
+            }
+
+            return null;
+        }
+
         private async void EksporWord_Click(object sender, TappedRoutedEventArgs e)
         {
             if (!await AdaAyatUntukEksporAsync()) return;
+
+            var rentang = await PilihRentangEksporAsync();
+            if (rentang == null) return;
+
+            var (dari, sampai, sertakanTerjemah) = rentang.Value;
+
+            //var (dari, sampai) = rentang.Value;
+            var ayatUntukEkspor = _ayatSaatIni
+                .Where(a => a.IsPembatasSurah || (a.NomorAyat >= dari && a.NomorAyat <= sampai))
+                .ToList();
 
             // Word sedang terbuka -> sisipkan langsung ke posisi kursor di dokumen aktif
             if (WordInteropService.WordSedangTerbuka())
@@ -575,11 +648,11 @@ namespace QuranKemenag.Views
                 {
                     WordInteropService.SisipkanKeDokumenAktif(
                         judulSurah: JudulSurahUntukEkspor(),
-                        daftarAyat: _ayatSaatIni,
-                        //tampilkanAyat: ChkAyat.IsChecked == true,
+                        daftarAyat: ayatUntukEkspor,
                         tampilkanLatin: ChkLatin.IsChecked == true,
-                        tampilkanTerjemah: ChkTerjemah.IsChecked == true,
-                        ukuranFontArab: _fontSize
+                        tampilkanTerjemah: sertakanTerjemah,
+                        ukuranFontArab: _fontSize,
+                        namaFontArab: EkstrakNamaFont(SelectedFontFamily)   
                     );
                 }
                 catch (Exception ex)
@@ -589,7 +662,6 @@ namespace QuranKemenag.Views
                 return;
             }
 
-            // Word tidak terbuka -> proses seperti biasa (buat file .docx baru)
             var picker = new FileSavePicker();
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow));
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -604,11 +676,11 @@ namespace QuranKemenag.Views
                 WordExportService.EksporAyat(
                     filePath: file.Path,
                     judulSurah: JudulSurahUntukEkspor(),
-                    daftarAyat: _ayatSaatIni,
-                    //tampilkanAyat: ChkAyat.IsChecked == true,
+                    daftarAyat: ayatUntukEkspor,
                     tampilkanLatin: ChkLatin.IsChecked == true,
-                    tampilkanTerjemah: ChkTerjemah.IsChecked == true,
-                    ukuranFontArab: _fontSize
+                    tampilkanTerjemah: sertakanTerjemah,
+                    ukuranFontArab: _fontSize,
+                    namaFontArab: EkstrakNamaFont(SelectedFontFamily)
                 );
 
                 await TawarkanBukaFileAsync(file.Path, "Word");
@@ -623,6 +695,34 @@ namespace QuranKemenag.Views
         {
             if (!await AdaAyatUntukEksporAsync()) return;
 
+            var rentang = await PilihRentangEksporAsync();
+            if (rentang == null) return;
+
+            var (dari, sampai, sertakanTerjemah) = rentang.Value;
+            var ayatUntukEkspor = _ayatSaatIni
+                .Where(a => a.IsPembatasSurah || (a.NomorAyat >= dari && a.NomorAyat <= sampai))
+                .ToList();
+
+            // PowerPoint sedang terbuka -> sisipkan slide baru ke presentasi aktif
+            if (PowerPointInteropService.PowerPointSedangTerbuka())
+            {
+                try
+                {
+                    PowerPointInteropService.SisipkanKeDokumenAktif(
+                        daftarAyat: ayatUntukEkspor,
+                        tampilkanLatin: ChkLatin.IsChecked == true,
+                        tampilkanTerjemah: sertakanTerjemah,
+                        namaFontArab: EkstrakNamaFont(SelectedFontFamily)
+                    );
+                }
+                catch (Exception ex)
+                {
+                    await TampilkanDialogAsync("Ekspor PowerPoint", $"Gagal menyisipkan ke PowerPoint:\n{ex.Message}");
+                }
+                return;
+            }
+
+            // PowerPoint tidak terbuka -> proses seperti biasa (buat file .pptx baru)
             var picker = new FileSavePicker();
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow));
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -637,9 +737,10 @@ namespace QuranKemenag.Views
                 PowerPointExportService.EksporAyat(
                     filePath: file.Path,
                     judulSurah: JudulSurahUntukEkspor(),
-                    daftarAyat: _ayatSaatIni,
+                    daftarAyat: ayatUntukEkspor,
                     tampilkanLatin: ChkLatin.IsChecked == true,
-                    tampilkanTerjemah: ChkTerjemah.IsChecked == true
+                    tampilkanTerjemah: sertakanTerjemah,
+                    namaFontArab: EkstrakNamaFont(SelectedFontFamily)
                 );
 
                 await TawarkanBukaFileAsync(file.Path, "PowerPoint");
