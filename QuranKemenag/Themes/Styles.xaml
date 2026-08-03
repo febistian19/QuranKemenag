@@ -242,8 +242,9 @@
     <!-- ===================== TOMBOL NAVIGASI SIDEBAR ===================== -->
     <Style x:Key="NavButtonStyle" TargetType="RadioButton">
         <Setter Property="GroupName" Value="NavMenu" />
-        <Setter Property="Height" Value="42" />
-        <Setter Property="Margin" Value="12,2" />
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Margin" Value="12,3" />
+        <Setter Property="Padding" Value="12,0" />
         <Setter Property="FontSize" Value="13.5" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -269,17 +270,25 @@
                                         <Setter Target="Bd.Background" Value="#E7F4EF" />
                                         <Setter Target="Isi.Foreground" Value="{StaticResource PrimaryGreenBrush}" />
                                         <Setter Target="Isi.FontWeight" Value="SemiBold" />
+                                        <Setter Target="AksenAktif.Opacity" Value="1" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Unchecked" />
                                 <VisualState x:Name="Indeterminate" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="Bd" CornerRadius="8" Background="Transparent" Padding="12,0">
-                            <ContentPresenter x:Name="Isi" VerticalAlignment="Center" HorizontalAlignment="Left"
-                                              Content="{TemplateBinding Content}"
-                                              Foreground="{TemplateBinding Foreground}" />
+
+                        <Border x:Name="Bd" CornerRadius="8" Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="Isi" VerticalAlignment="Center"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}" />
                         </Border>
+
+                        <!-- Aksen garis hijau di kiri untuk menu yang aktif -->
+                        <Rectangle x:Name="AksenAktif" Width="3" HorizontalAlignment="Left"
+                               Fill="{StaticResource PrimaryGreenBrush}" RadiusX="2" RadiusY="2"
+                               Opacity="0" Margin="0,7,0,7" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

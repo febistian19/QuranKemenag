@@ -27,12 +27,12 @@
                 </Grid.RowDefinitions>
 
                 <!-- Logo & judul aplikasi -->
-                <Border Grid.Row="0"
-                Height="64"
-                Background="{StaticResource SidebarBrush}"
-                BorderBrush="{StaticResource BorderBrush2}"
-                BorderThickness="0,0,1,0"
-                Padding="16,0">
+                <Border x:Name="BorderLogoHeader" Grid.Row="0"
+                    Height="64"
+                    Background="{StaticResource SidebarBrush}"
+                    BorderBrush="{StaticResource BorderBrush2}"
+                    BorderThickness="0,0,1,0"
+                    Padding="16,0">
 
                     <Grid VerticalAlignment="Center">
 
@@ -42,66 +42,66 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Grid.Column="0"
-                            Source="/Resources/Images/logo-kemenag.png"
-                            Width="40"
-                            Height="40"
-                            Stretch="Uniform"
-                            VerticalAlignment="Center"/>
+                    Source="/Resources/Images/logo-kemenag.png"
+                    Width="40"
+                    Height="40"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center"/>
 
-                        <StackPanel Grid.Column="1"
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Center">
+                        <StackPanel x:Name="PanelJudulApp" Grid.Column="1"
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center">
 
                             <TextBlock Text="Qur'an Kemenag"
-                                FontSize="15"
-                                FontWeight="SemiBold"
-                                Foreground="{StaticResource TextPrimaryBrush}"/>
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource TextPrimaryBrush}"/>
 
                             <TextBlock Text="Windows"
-                                FontSize="11"
-                                Foreground="{StaticResource TextSecondaryBrush}"/>
+                        FontSize="11"
+                        Foreground="{StaticResource TextSecondaryBrush}"/>
 
                         </StackPanel>
 
                     </Grid>
 
                 </Border>
-                
+
 
                 <!-- Menu navigasi -->
                 <StackPanel Grid.Row="1" Margin="0,10,0,0">
                     <RadioButton x:Name="NavDashboard" Style="{StaticResource NavButtonStyle}" Checked="NavDashboard_Checked">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE80F;" FontSize="15" Width="24" />
-                            <TextBlock Text="Dashboard" />
+                            <TextBlock x:Name="TxtNavDashboard" Text="Dashboard" />
                         </StackPanel>
                     </RadioButton>
 
-                    <TextBlock Text="AL-QUR'AN" Style="{StaticResource NavGroupLabel}" />
+                    <TextBlock x:Name="TxtGroupAlQuran" Text="AL-QUR'AN" Style="{StaticResource NavGroupLabel}" />
                     <RadioButton x:Name="NavSurah" Style="{StaticResource NavButtonStyle}" Checked="NavSurah_Checked">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8A5;" FontSize="15" Width="24" />
-                            <TextBlock Text="Per Surah" />
+                            <TextBlock x:Name="TxtNavSurah" Text="Per Surah" />
                         </StackPanel>
                     </RadioButton>
                     <RadioButton x:Name="NavJuz" Style="{StaticResource NavButtonStyle}" Checked="NavJuz_Checked">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE736;" FontSize="15" Width="24" />
-                            <TextBlock Text="Per Juz" />
+                            <TextBlock x:Name="TxtNavJuz" Text="Per Juz" />
                         </StackPanel>
                     </RadioButton>
 
-                    <TextBlock Text="PENGATURAN" Style="{StaticResource NavGroupLabel}" />
+                    <TextBlock x:Name="TxtGroupPengaturan" Text="PENGATURAN" Style="{StaticResource NavGroupLabel}" />
                     <RadioButton x:Name="NavSettings" Style="{StaticResource NavButtonStyle}" Checked="NavSettings_Checked">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE713;" FontSize="15" Width="24" />
-                            <TextBlock Text="Pengaturan Tampilan" />
+                            <TextBlock x:Name="TxtNavSettings" Text="Pengaturan Tampilan" />
                         </StackPanel>
                     </RadioButton>
                     <RadioButton x:Name="NavAbout" Style="{StaticResource NavButtonStyle}" Checked="NavAbout_Checked">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" FontSize="15" Width="24" />
-                            <TextBlock Text="Tentang Aplikasi" />
+                            <TextBlock x:Name="TxtNavAbout" Text="Tentang Aplikasi" />
                         </StackPanel>
                     </RadioButton>
                 </StackPanel>

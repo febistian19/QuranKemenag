@@ -1,6 +1,8 @@
 using Microsoft.UI.Xaml;
-using QuranKemenag.Views;
+using Microsoft.UI.Xaml.Controls;
 using QuranKemenag.Models;
+using QuranKemenag.Views;
+using System;
 namespace QuranKemenag
 {
     public sealed partial class MainWindow : Window
@@ -115,12 +117,35 @@ namespace QuranKemenag
 
         private bool _sidebarTersembunyi = false;
 
+        private const double LebarSidebarPenuh = 240;
+        private const double LebarSidebarMini = 64;
+
         private void BtnToggleSidebar_Click(object sender, RoutedEventArgs e)
         {
             _sidebarTersembunyi = !_sidebarTersembunyi;
-            ColSidebar.Width = _sidebarTersembunyi ? new GridLength(0) : new GridLength(240);
+            ColSidebar.Width = new GridLength(_sidebarTersembunyi ? LebarSidebarMini : LebarSidebarPenuh);
 
-            // Icon berubah sesuai status: panah kiri saat terbuka, hamburger saat tertutup
+            var visibilitasTeks = _sidebarTersembunyi ? Visibility.Collapsed : Visibility.Visible;
+            PanelJudulApp.Visibility = visibilitasTeks;
+            TxtNavDashboard.Visibility = visibilitasTeks;
+            TxtNavSurah.Visibility = visibilitasTeks;
+            TxtNavJuz.Visibility = visibilitasTeks;
+            TxtNavSettings.Visibility = visibilitasTeks;
+            TxtNavAbout.Visibility = visibilitasTeks;
+            TxtGroupAlQuran.Visibility = visibilitasTeks;
+            TxtGroupPengaturan.Visibility = visibilitasTeks;
+
+            // Header logo: padding kiri dikecilin pas mini, biar logo (40px) muat di kolom 64px
+            // tanpa kepotong. Padding normal lagi pas sidebar penuh.
+            BorderLogoHeader.Padding = _sidebarTersembunyi ? new Thickness(12, 0, 0, 0) : new Thickness(16, 0, 16, 0);
+
+            // Tooltip nama menu cuma perlu muncul pas mode mini (labelnya kan disembunyikan)
+            ToolTipService.SetToolTip(NavDashboard, _sidebarTersembunyi ? "Dashboard" : null);
+            ToolTipService.SetToolTip(NavSurah, _sidebarTersembunyi ? "Per Surah" : null);
+            ToolTipService.SetToolTip(NavJuz, _sidebarTersembunyi ? "Per Juz" : null);
+            ToolTipService.SetToolTip(NavSettings, _sidebarTersembunyi ? "Pengaturan Tampilan" : null);
+            ToolTipService.SetToolTip(NavAbout, _sidebarTersembunyi ? "Tentang Aplikasi" : null);
+
             IkonToggleSidebar.Glyph = _sidebarTersembunyi ? "\uE700" : "\uE76B";
         }
     }
