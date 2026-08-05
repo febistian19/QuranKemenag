@@ -30,6 +30,9 @@ namespace QuranKemenag.Models
         public string JumlahAyatArabUntukPembatas { get; set; } = string.Empty;
         public bool TampilkanBismillah { get; set; } = false;
 
+        // mengambil basmalah dari database yang bersangkutan, untuk ditampilkan di atas ayat pertama surah (kecuali surah At-Taubah)
+        public string TeksBismillah { get; set; } = string.Empty;
+
         public Visibility VisibilitasDivider => IsPembatasSurah ? Visibility.Visible : Visibility.Collapsed;
         public Visibility VisibilitasAyatBiasa => IsPembatasSurah ? Visibility.Collapsed : Visibility.Visible;
         public Visibility VisibilitasBismillah => TampilkanBismillah ? Visibility.Visible : Visibility.Collapsed;

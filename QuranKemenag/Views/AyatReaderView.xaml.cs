@@ -19,6 +19,8 @@ using QuranKemenag.Data.Database;
 using QuranKemenag.Models;
 using QuranKemenag.Services;
 using Windows.UI;
+using Microsoft.UI.Xaml.Documents;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 
 namespace QuranKemenag.Views
@@ -39,10 +41,73 @@ namespace QuranKemenag.Views
         public static bool TampilkanLatinGlobal { get; private set; } = true;
         public static bool TampilkanTerjemahGlobal { get; private set; } = true;
         public static double UkuranFontGlobal { get; private set; } = 26;
+        public static double TinggiBarisGlobal { get; private set; } = 26 * 1.75;
         // Selected font for Arabic text. Static so DataTemplate x:Bind can access it.
         public static FontFamily SelectedFontFamily { get; private set; } = new FontFamily("ms-appx:///Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ IsepMisbah");
+        public static FlowDirection ArahTeksArabGlobal { get; private set; } = FlowDirection.RightToLeft;
+        public static TextAlignment PerataanTeksArabGlobal { get; private set; } = TextAlignment.Justify;
+        public static TextWrapping PembungkusanTeksArabGlobal { get; private set; } = TextWrapping.Wrap;
+        public static bool TampilanNormalGlobal { get; private set; } = true;
+        public static bool TampilanUtsmaniGlobal { get; private set; } = false;
 
         private bool _fontsLoaded;
+        private bool _modeUtsmaniAktif = false;
+
+        // URI font Lpmq_Hafs_01 dipakai sebagai penanda "mode Utsmani" — begitu font ini dipilih,
+        // sumber data ayat ikut dialihkan ke msi_simbol.db (bukan cuma ganti tampilan font biasa),
+        // karena teksnya pakai encoding PUA yang cuma cocok dengan font ini.
+        private const string UriFontUtsmani = "ms-appx:///Assets/Fonts/Lpmq_Hafs_01-Regular.ttf#Lpmq_Hafs_01";
+
+        private string? _teksBismillahStandarCache;
+        private string? _teksBismillahUtsmaniCache;
+
+        /// <summary>
+        /// Bismillah selalu diambil dari ayat 1 Al-Fatihah, dari sumber data yang sesuai mode font
+        /// aktif (quran.db biasa, atau msi_simbol.db untuk Utsmani) — bukan hardcode, supaya kalau
+        /// datanya diperbaiki di database, Bismillah ikut ter-update otomatis tanpa ubah kode.
+        /// Di-cache per mode supaya tidak query berulang tiap kali banner surah muncul.
+        /// </summary>
+        private async Task<string> AmbilTeksBismillahAsync()
+        {
+            if (_modeUtsmaniAktif)
+            {
+                if (_teksBismillahUtsmaniCache != null) return _teksBismillahUtsmaniCache;
+
+                var ayatFatihah = await QuranDatabase.AmbilAyatSurahUtsmaniAsync(1);
+                _teksBismillahUtsmaniCache = ayatFatihah.FirstOrDefault(a => a.NomorAyat == 1)?.TeksArab ?? "";
+                return _teksBismillahUtsmaniCache;
+            }
+            else
+            {
+                if (_teksBismillahStandarCache != null) return _teksBismillahStandarCache;
+
+                var ayatFatihah = await QuranDatabase.AmbilAyatSurahAsync(1);
+                string teksAyat1 = ayatFatihah.FirstOrDefault(a => a.NomorAyat == 1)?.TeksArab ?? "";
+
+                string isi = teksAyat1.Trim('\u202E', '\u202C');
+
+                _teksBismillahStandarCache = "\u202E" + isi + "\u202C";
+                return _teksBismillahStandarCache;
+            }
+        }
+
+        private static readonly Dictionary<string, double> FontSizeMultiplier = new()
+            {
+                { "Utsmani (Simbol)", 1.0 },
+                { "LPMQ Isep Misbah", 0.90 },
+                { "KFGQPC Uthmanic Script HAFS", 1.0 }
+            };
+
+        // ⬇️ TAMBAHAN BARU
+        private void TerapkanUkuranFontGlobal()
+        {
+            string namaFontAktif = (CmbJenisFont?.SelectedItem as ComboBoxItem)?.Content as string ?? "";
+            double multiplier = FontSizeMultiplier.GetValueOrDefault(namaFontAktif, 1.0);
+            double ukuranAktual = _fontSize * multiplier;
+
+            UkuranFontGlobal = ukuranAktual;
+            TinggiBarisGlobal = ukuranAktual * 1.75;
+        }
 
         public AyatReaderView(MainWindow mainWindow, int nomorSurahAwal, int ayatMulai = 1)
         {
@@ -50,6 +115,7 @@ namespace QuranKemenag.Views
             _mainWindow = mainWindow;
 
             UkuranFontGlobal = _fontSize;
+            TinggiBarisGlobal = _fontSize * 1.75;
 
             Loaded += async (s, e) =>
             {
@@ -116,7 +182,8 @@ namespace QuranKemenag.Views
 
                 // Banner pembatas nama surah (ditampilkan untuk setiap surah, termasuk yang pertama,
                 // supaya jelas juz ini dimulai dari surah & ayat berapa).
-                var pembatas = BuatPembatasSurah(surahInfo, $"{surahInfo.NamaLatin} ({surahInfo.Arti}) • Ayat {dari}-{sampai}", dari);
+                string teksBismillahJuz = await AmbilTeksBismillahAsync();
+                var pembatas = BuatPembatasSurah(surahInfo, $"{surahInfo.NamaLatin} ({surahInfo.Arti}) • Ayat {dari}-{sampai}", dari, teksBismillahJuz);
                 hasil.Add(pembatas);
 
 
@@ -166,7 +233,7 @@ namespace QuranKemenag.Views
         }
 
         /// <summary>Membuat entri "pembatas" (banner nama surah + Bismillah) untuk 1 surah.</summary>
-        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang, int ayatMulaiTampil)
+        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang, int ayatMulaiTampil, string teksBismillah)
         {
             // Bismillah cuma tampil kalau ayat yang ditampilkan benar-benar dimulai dari ayat 1
             // surah tersebut (bukan cuma karena kebetulan surah ini "muncul" di tengah rentang juz),
@@ -181,7 +248,8 @@ namespace QuranKemenag.Views
                 NamaSurahArabUntukPembatas = surah.NamaArab,
                 TempatTurunUntukPembatas = KeArabMakkiyahMadaniyah(surah.TempatTurun),
                 JumlahAyatArabUntukPembatas = $"آياتها {KeAngkaArabTeks(surah.JumlahAyat)}",
-                TampilkanBismillah = tampilkanBismillah
+                TampilkanBismillah = tampilkanBismillah,
+                TeksBismillah = teksBismillah
             };
         }
         private async Task InisialisasiAsync(int nomorSurahAwal, int ayatMulai)
@@ -193,7 +261,7 @@ namespace QuranKemenag.Views
             await MuatSurahAsync(nomorSurahAwal, ayatMulai);
         }
 
-        private void CmbJenisFont_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CmbJenisFont_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (CmbJenisFont == null) return;
 
@@ -208,8 +276,76 @@ namespace QuranKemenag.Views
                     // ignore invalid uri
                 }
 
-                SegarkanKartuAyat();
+                bool modeUtsmaniBaru = uri == UriFontUtsmani;
+                TampilanNormalGlobal = !modeUtsmaniBaru;
+                TampilanUtsmaniGlobal = modeUtsmaniBaru;
+
+                TerapkanUkuranFontGlobal();   // ⬅️ tambahan baru, sebelum if di bawah
+
+                if (modeUtsmaniBaru != _modeUtsmaniAktif)
+                {
+                    _modeUtsmaniAktif = modeUtsmaniBaru;
+                    await TerapkanModeUtsmaniAsync();
+                }
+                else
+                {
+                    SegarkanKartuAyat();
+                }
             }
+        }
+
+        /// <summary>
+        /// Membangun ulang isi RichTextBlock font Utsmani per kartu ayat. TeksArab (properti model)
+        /// sudah dalam bentuk "kata-katanya dibalik urutannya" (dipakai untuk mode 1-baris seperti
+        /// Salin Ayat & Bismillah yang sudah benar). Untuk RichTextBlock yang bisa wrap banyak baris,
+        /// dibutuhkan urutan kata ASLI supaya baris tersusun benar — jadi dibalik lagi di sini
+        /// (membalik yang sudah dibalik = balik ke urutan asli), lalu dipasang sebagai Run terpisah.
+        /// </summary>
+        private void TeksUtsmani_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is not RichTextBlock rtb || rtb.Tag is not string teksSudahBenar) return;
+            if (rtb.Blocks.Count == 0 || rtb.Blocks[0] is not Paragraph paragraf) return;
+
+            paragraf.Inlines.Clear();
+
+            var kata = teksSudahBenar.Split(new[] { '\u00A0', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < kata.Length; i++)
+            {
+                paragraf.Inlines.Add(new Run { Text = kata[i] });
+                if (i < kata.Length - 1) paragraf.Inlines.Add(new Run { Text = "\u00A0" });
+            }
+        }
+
+        /// <summary>
+        /// Saat mode Utsmani dinyalakan: kunci dropdown surah cuma ke yang datanya tersedia
+        /// (SurahTersediaUtsmani), lalu muat ulang ayat dari msi_simbol.db.
+        /// Saat dimatikan: balikin dropdown surah ke daftar lengkap 114 surah seperti biasa.
+        /// </summary>
+        private async Task TerapkanModeUtsmaniAsync()
+        {
+            List<Surah> daftarTampil;
+            int nomorAwal;
+
+            if (_modeUtsmaniAktif)
+            {
+                daftarTampil = _daftarSurah.Where(s => QuranDatabase.SurahTersediaUtsmani.Contains(s.Nomor)).ToList();
+                nomorAwal = (_surahSaatIni != null && QuranDatabase.SurahTersediaUtsmani.Contains(_surahSaatIni.Nomor))
+                    ? _surahSaatIni.Nomor
+                    : QuranDatabase.SurahTersediaUtsmani[0];
+            }
+            else
+            {
+                daftarTampil = _daftarSurah;
+                nomorAwal = _surahSaatIni?.Nomor ?? 1;
+            }
+
+            CmbSurah.SelectionChanged -= CmbSurah_SelectionChanged;
+            CmbSurah.ItemsSource = daftarTampil;
+            CmbSurah.SelectedValue = nomorAwal;
+            CmbSurah.SelectionChanged += CmbSurah_SelectionChanged;
+
+            await MuatSurahAsync(nomorAwal);
         }
 
         private async Task LoadFontsFromAssetsAsync()
@@ -234,14 +370,32 @@ namespace QuranKemenag.Views
                 {
                     var name = Path.GetFileName(fp);
                     var raw = Path.GetFileNameWithoutExtension(name);
-                    var displayName = raw.Replace('_', ' ');
-                    displayName = Regex.Replace(displayName, "[-_]?Regular$", "", RegexOptions.IgnoreCase).Trim();
-                    displayName = Regex.Replace(displayName, "([a-z])([A-Z])", "$1 $2");
-                    if (string.IsNullOrWhiteSpace(displayName)) displayName = raw;
+
+                    // Lpmq_Hafs_01 itu font simbol (PUA) khusus buat mode Utsmani, bukan font
+                    // "biasa" — namanya ditampilkan beda + Tag-nya dipatok ke UriFontUtsmani
+                    // supaya CmbJenisFont_SelectionChanged bisa mendeteksi & switch sumber data.
+                    bool iniFontUtsmani = raw.Equals("Lpmq_Hafs_01-Regular", StringComparison.OrdinalIgnoreCase);
+
+                    string displayName;
+                    string uri;
+
+                    if (iniFontUtsmani)
+                    {
+                        displayName = "Utsmani (Simbol)";
+                        uri = UriFontUtsmani;
+                    }
+                    else
+                    {
+                        displayName = raw.Replace('_', ' ');
+                        displayName = Regex.Replace(displayName, "[-_]?Regular$", "", RegexOptions.IgnoreCase).Trim();
+                        displayName = Regex.Replace(displayName, "([a-z])([A-Z])", "$1 $2");
+                        if (string.IsNullOrWhiteSpace(displayName)) displayName = raw;
+                        uri = $"ms-appx:///Assets/Fonts/{name}#{displayName}";
+                    }
+
                     if (seen.Contains(displayName)) continue;
 
                     seen.Add(displayName);
-                    var uri = $"ms-appx:///Assets/Fonts/{name}#{displayName}";
                     var item = new ComboBoxItem { Content = displayName, Tag = uri };
                     CmbJenisFont.Items.Add(item);
                 }
@@ -268,6 +422,7 @@ namespace QuranKemenag.Views
                     }
                 }
 
+                TerapkanUkuranFontGlobal();   // ⬅️ TAMBAHKAN BARIS INI
                 _fontsLoaded = true;
             }
             catch
@@ -319,7 +474,9 @@ namespace QuranKemenag.Views
 
         private async Task TampilkanAyatAsync(int nomorSurah, int dari, int sampai)
         {
-            var semuaAyatSurah = await QuranDatabase.AmbilAyatSurahAsync(nomorSurah);
+            var semuaAyatSurah = _modeUtsmaniAktif
+                ? await QuranDatabase.AmbilAyatSurahUtsmaniAsync(nomorSurah)
+                : await QuranDatabase.AmbilAyatSurahAsync(nomorSurah);
 
             if (semuaAyatSurah.Count == 0)
             {
@@ -350,7 +507,21 @@ namespace QuranKemenag.Views
                 // (bukan pas user pilih rentang custom yang tidak menyertakan ayat pertama).
                 if (dari == 1 && _surahSaatIni != null)
                 {
-                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat", 1);
+                    string teksBismillah = await AmbilTeksBismillahAsync();
+
+                    // untuk menghapus nomer ayat di ayat bismilah (1)
+
+                    // SESUDAH
+                    if (_modeUtsmaniAktif)
+                    {
+                        var potonganBismillah = teksBismillah.Split(new[] { '\u00A0', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        teksBismillah = potonganBismillah.Length > 1
+                            ? string.Join(" ", potonganBismillah.Take(potonganBismillah.Length - 1))
+                            : teksBismillah;
+                    }
+
+                    // end
+                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat", 1, teksBismillah);
                     _ayatSaatIni.Insert(0, pembatas);
                 }
             }
@@ -420,7 +591,7 @@ namespace QuranKemenag.Views
         {
             _fontSize = Math.Min(_fontSize + 2, 48);
             TxtUkuranFont.Text = _fontSize.ToString();
-            UkuranFontGlobal = _fontSize;
+            TerapkanUkuranFontGlobal();   // ⬅️ ganti 2 baris lama
             SegarkanKartuAyat();
         }
 
@@ -428,7 +599,7 @@ namespace QuranKemenag.Views
         {
             _fontSize = Math.Max(_fontSize - 2, 14);
             TxtUkuranFont.Text = _fontSize.ToString();
-            UkuranFontGlobal = _fontSize;
+            TerapkanUkuranFontGlobal();   // ⬅️ ganti 2 baris lama
             SegarkanKartuAyat();
         }
 

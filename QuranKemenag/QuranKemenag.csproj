@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -16,6 +16,7 @@
   <ItemGroup>
     <None Remove="Assets\Fonts\KFGQPC Uthmanic Script HAFS Regular.otf" />
     <None Remove="Assets\Fonts\LPMQ IsepMisbah.ttf" />
+    <None Remove="Assets\msi_simbol.db" />
     <None Remove="Assets\quran.db" />
     <None Remove="Resources\Images\bingkai-nomor-ayat.png" />
     <None Remove="Resources\Images\iluminasi-awalan-surah.png" />

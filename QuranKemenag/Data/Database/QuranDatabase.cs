@@ -18,8 +18,13 @@ namespace QuranKemenag.Data.Database
     public static class QuranDatabase
     {
         private static string DbPath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "quran.db");
+        private static string DbPathUtsmani => Path.Combine(ApplicationData.Current.LocalFolder.Path, "msi_simbol.db");
 
         private static string ConnectionString => $"Data Source={DbPath}";
+        private static string ConnectionStringUtsmani => $"Data Source={DbPathUtsmani}";
+
+        /// <summary>Nomor surah yang datanya sudah tersedia di database Utsmani (msi_simbol.db) — masih data percobaan.</summary>
+        public static readonly int[] SurahTersediaUtsmani = { 1, 2 };
 
         /// <summary>
         /// Dipanggil sekali saat aplikasi start. Menyalin database bawaan (Asset)
@@ -27,11 +32,15 @@ namespace QuranKemenag.Data.Database
         /// </summary>
         public static async Task InisialisasiAsync()
         {
+            var targetFolder = ApplicationData.Current.LocalFolder;
+
             var assetFile = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/quran.db"));
-
-            var targetFolder = ApplicationData.Current.LocalFolder;
             await assetFile.CopyAsync(targetFolder, "quran.db", NameCollisionOption.ReplaceExisting);
+
+            var assetFileUtsmani = await StorageFile.GetFileFromApplicationUriAsync(
+                new Uri("ms-appx:///Assets/msi_simbol.db"));
+            await assetFileUtsmani.CopyAsync(targetFolder, "msi_simbol.db", NameCollisionOption.ReplaceExisting);
         }
 
         public static async Task<List<Surah>> AmbilDaftarSurahAsync()
@@ -88,11 +97,84 @@ namespace QuranKemenag.Data.Database
                     NomorSurah = nomorSurah,
                     NomorAyat = reader.GetInt32(0),
                     TeksArab = reader.GetString(1),
-                    TeksLatin = "",       // masih belum tersedia di database ini
+                    TeksLatin = "",
                     Terjemah = BersihkanPenandaCatatanKaki(reader.IsDBNull(2) ? "" : reader.GetString(2)),
                     CatatanKaki = string.IsNullOrWhiteSpace(footnote) ? null : footnote,
-                    Juz = reader.GetInt32(4),
+                    Juz = reader.GetInt32(2),
                 });
+            }
+
+            return daftar;
+        }
+
+        /// <summary>
+        /// Ambil ayat dari database khusus font Utsmani (msi_simbol.db) — teksnya pakai encoding
+        /// PUA (Private Use Area), cuma bisa dirender benar dengan font "Lpmq_Hafs_01". Data di
+        /// database ini masih percobaan, baru mencakup surah yang ada di SurahTersediaUtsmani.
+        /// Terjemahan tetap diambil dari quran.db utama (terjemah_id) supaya tidak perlu duplikasi data.
+        /// </summary>
+        public static async Task<List<Ayat>> AmbilAyatSurahUtsmaniAsync(int nomorSurah)
+        {
+            var daftar = new List<Ayat>();
+
+            using (var koneksiUtsmani = new SqliteConnection(ConnectionStringUtsmani))
+            {
+                await koneksiUtsmani.OpenAsync();
+
+                var cmd = koneksiUtsmani.CreateCommand();
+                cmd.CommandText = "SELECT ayat, teks, juz FROM quran WHERE surah = $nomor ORDER BY ayat";
+                cmd.Parameters.AddWithValue("$nomor", nomorSurah);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    // Teks disimpan dalam urutan ASLI (tidak dibalik manual). Dibungkus karakter
+                    // kontrol Unicode RLO (\u202E) ... PDF (\u202C) supaya mesin render Windows
+                    // memaksa urutan tampil kanan-ke-kiri yang benar (per kata & per baris saat wrap),
+                    // walau kode PUA di font ini secara default tidak dikenali sebagai "huruf RTL".
+                    string teksRtl = "\u202E" + reader.GetString(1) + "\u202C";
+
+                    daftar.Add(new Ayat
+                    {
+                        NomorSurah = nomorSurah,
+                        NomorAyat = reader.GetInt32(0),
+                        TeksArab = teksRtl,
+                        TeksLatin = "",
+                        Juz = reader.GetInt32(2),
+                    });
+                }
+            }
+
+            if (daftar.Count == 0) return daftar;
+
+            // Lengkapi terjemahan & catatan kaki dari quran.db utama (kalau ada).
+            using (var koneksiUtama = new SqliteConnection(ConnectionString))
+            {
+                await koneksiUtama.OpenAsync();
+
+                var cmdTerjemah = koneksiUtama.CreateCommand();
+                cmdTerjemah.CommandText = "SELECT ayat, teks, footnote FROM terjemah_id WHERE surah = $nomor";
+                cmdTerjemah.Parameters.AddWithValue("$nomor", nomorSurah);
+
+                var petaTerjemah = new Dictionary<int, (string Teks, string? Footnote)>();
+                using (var readerT = await cmdTerjemah.ExecuteReaderAsync())
+                {
+                    while (await readerT.ReadAsync())
+                    {
+                        petaTerjemah[readerT.GetInt32(0)] = (
+                            readerT.IsDBNull(1) ? "" : readerT.GetString(1),
+                            readerT.IsDBNull(2) ? null : readerT.GetString(2));
+                    }
+                }
+
+                foreach (var ayat in daftar)
+                {
+                    if (petaTerjemah.TryGetValue(ayat.NomorAyat, out var t))
+                    {
+                        ayat.Terjemah = BersihkanPenandaCatatanKaki(t.Teks);
+                        ayat.CatatanKaki = string.IsNullOrWhiteSpace(t.Footnote) ? null : t.Footnote;
+                    }
+                }
             }
 
             return daftar;

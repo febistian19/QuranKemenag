@@ -122,7 +122,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Kategori Makkiyah/Madaniyah, slot kiri -->
-                                            <TextBlock Grid.Column="0" Text="{x:Bind JumlahAyatArabUntukPembatas}" FontFamily="Traditional Arabic" FontSize="35"
+                                            <TextBlock Grid.Column="0" Text="{x:Bind JumlahAyatArabUntukPembatas}" FontFamily="Traditional Arabic" FontSize="25"
                                                        Foreground="{StaticResource PrimaryGreenDarkBrush}" FlowDirection="RightToLeft"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -144,7 +144,7 @@
                                     <TextBlock Text="{x:Bind NamaSurahUntukPembatas}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
                                                HorizontalAlignment="Center" Margin="0,6,0,0" />
                                     <!-- Bismillah, dilewati untuk Al-Fatihah & At-Taubah -->
-                                    <TextBlock Visibility="{x:Bind VisibilitasBismillah}" Text="بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ"
+                                    <TextBlock Visibility="{x:Bind VisibilitasBismillah}" Text="{x:Bind TeksBismillah}"
                                         FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" FontSize="28" FontWeight="Bold"
                                         Foreground="{StaticResource TextPrimaryBrush}" FlowDirection="RightToLeft"
                                         HorizontalAlignment="Center" Margin="0,20,0,0" />
@@ -169,15 +169,16 @@
                                         <TextBlock Text="{x:Bind NomorAyat, Converter={StaticResource IntKeAngkaArab}}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
                                     </Grid>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
-                                       FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" HorizontalAlignment="Stretch"
-                                       TextAlignment="Justify"
-                                       FlowDirection="RightToLeft" TextWrapping="Wrap" LineHeight="46"
-                                       Foreground="{StaticResource TextPrimaryBrush}"
-                                       FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneTime}"
-                                       Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
+                                           FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" HorizontalAlignment="Stretch"
+                                           TextAlignment="Left"
+                                           FlowDirection="RightToLeft" TextWrapping="Wrap" LineHeight="{x:Bind local:AyatReaderView.TinggiBarisGlobal, Mode=OneTime}"
+                                           LineStackingStrategy="BlockLineHeight"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="{x:Bind local:AyatReaderView.UkuranFontGlobal, Mode=OneTime}"
+                                           Visibility="{x:Bind local:AyatReaderView.TampilkanAyatGlobal, Mode=OneTime, Converter={StaticResource BoolToVis}}" />
 
-                                    <!-- Tombol bookmark --><!--
+                                        <!-- Tombol bookmark --><!--
                                     <Button Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="8,0,0,0"
                                             Background="Transparent" BorderThickness="0"
                                             Tag="{x:Bind NomorAyat}" Click="BookmarkAyat_Click">
