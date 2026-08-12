@@ -56,13 +56,13 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.Column="0" Style="{StaticResource NomorBadge}" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Nomor, Converter={StaticResource IntKeAngkaArab}}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Nomor, Converter={StaticResource IntKeAngkaArab}}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource GoldBrush}" FontWeight="SemiBold" />
                                 </Border>
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                     <TextBlock Text="{Binding DisplayJudul}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" />
-                                    <TextBlock Text="{Binding DisplayInfo}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" />
+                                    <TextBlock Text="{Binding DisplayInfo}" Foreground="{ThemeResource TextSecondaryBrush}" FontSize="11" />
                                 </StackPanel>
-                                <TextBlock Grid.Column="2" Text="{Binding NamaArab}" Foreground="{StaticResource PrimaryGreenBrush}" FontSize="16" VerticalAlignment="Top" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah"/>
+                                <TextBlock Grid.Column="2" Text="{Binding NamaArab}" Foreground="{ThemeResource PrimaryGreenBrush}" FontSize="16" VerticalAlignment="Top" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

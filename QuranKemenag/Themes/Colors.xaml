@@ -1,30 +1,70 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="PrimaryGreenColor">#1E7145</Color>
-    <Color x:Key="PrimaryGreenDarkColor">#14532D</Color>
-    <Color x:Key="AccentTealColor">#0F9B8E</Color>
-    <Color x:Key="AccentTealLightColor">#3FBFB0</Color>
-    <Color x:Key="BackgroundColor">#F5F6F7</Color>
-    <Color x:Key="SidebarColor">#FFFFFF</Color>
-    <Color x:Key="BorderColor">#E3E5E8</Color>
-    <Color x:Key="TextPrimaryColor">#1F2937</Color>
-    <Color x:Key="TextSecondaryColor">#6B7280</Color>
-    <Color x:Key="GoldColor">#C9A227</Color>
+    <ResourceDictionary.ThemeDictionaries>
 
-    <SolidColorBrush x:Key="PrimaryGreenBrush" Color="{StaticResource PrimaryGreenColor}" />
-    <SolidColorBrush x:Key="PrimaryGreenDarkBrush" Color="{StaticResource PrimaryGreenDarkColor}" />
-    <SolidColorBrush x:Key="AccentTealBrush" Color="{StaticResource AccentTealColor}" />
-    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
-    <SolidColorBrush x:Key="SidebarBrush" Color="{StaticResource SidebarColor}" />
-    <SolidColorBrush x:Key="BorderBrush2" Color="{StaticResource BorderColor}" />
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
-    <SolidColorBrush x:Key="GoldBrush" Color="{StaticResource GoldColor}" />
+        <!-- ===================== TEMA TERANG ===================== -->
+        <ResourceDictionary x:Key="Light">
+            <Color x:Key="PrimaryGreenColor">#1E7145</Color>
+            <Color x:Key="PrimaryGreenDarkColor">#14532D</Color>
+            <Color x:Key="AccentTealColor">#0F9B8E</Color>
+            <Color x:Key="AccentTealLightColor">#3FBFB0</Color>
+            <Color x:Key="BackgroundColor">#F5F6F7</Color>
+            <Color x:Key="SidebarColor">#FFFFFF</Color>
+            <Color x:Key="CardColor">#FFFFFF</Color>
+            <Color x:Key="BorderColor">#E3E5E8</Color>
+            <Color x:Key="TextPrimaryColor">#1F2937</Color>
+            <Color x:Key="TextSecondaryColor">#6B7280</Color>
+            <Color x:Key="GoldColor">#C9A227</Color>
 
-    <LinearGradientBrush x:Key="BannerGradientBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="{StaticResource AccentTealColor}" Offset="0" />
-        <GradientStop Color="{StaticResource PrimaryGreenDarkColor}" Offset="1" />
-    </LinearGradientBrush>
+            <SolidColorBrush x:Key="PrimaryGreenBrush" Color="{StaticResource PrimaryGreenColor}" />
+            <SolidColorBrush x:Key="PrimaryGreenDarkBrush" Color="{StaticResource PrimaryGreenDarkColor}" />
+            <SolidColorBrush x:Key="AccentTealBrush" Color="{StaticResource AccentTealColor}" />
+            <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+            <SolidColorBrush x:Key="SidebarBrush" Color="{StaticResource SidebarColor}" />
+            <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}" />
+            <SolidColorBrush x:Key="BorderBrush2" Color="{StaticResource BorderColor}" />
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+            <SolidColorBrush x:Key="GoldBrush" Color="{StaticResource GoldColor}" />
+
+            <LinearGradientBrush x:Key="BannerGradientBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{StaticResource AccentTealColor}" Offset="0" />
+                <GradientStop Color="{StaticResource PrimaryGreenDarkColor}" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+
+        <!-- ===================== TEMA GELAP ===================== -->
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="PrimaryGreenColor">#34A870</Color>
+            <Color x:Key="PrimaryGreenDarkColor">#1E7145</Color>
+            <Color x:Key="AccentTealColor">#2DD4BF</Color>
+            <Color x:Key="AccentTealLightColor">#5EEAD4</Color>
+            <Color x:Key="BackgroundColor">#121417</Color>
+            <Color x:Key="SidebarColor">#1B1E22</Color>
+            <Color x:Key="CardColor">#1E2126</Color>
+            <Color x:Key="BorderColor">#2C3036</Color>
+            <Color x:Key="TextPrimaryColor">#F3F4F6</Color>
+            <Color x:Key="TextSecondaryColor">#9CA3AF</Color>
+            <Color x:Key="GoldColor">#D9B54A</Color>
+
+            <SolidColorBrush x:Key="PrimaryGreenBrush" Color="{StaticResource PrimaryGreenColor}" />
+            <SolidColorBrush x:Key="PrimaryGreenDarkBrush" Color="{StaticResource PrimaryGreenDarkColor}" />
+            <SolidColorBrush x:Key="AccentTealBrush" Color="{StaticResource AccentTealColor}" />
+            <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+            <SolidColorBrush x:Key="SidebarBrush" Color="{StaticResource SidebarColor}" />
+            <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}" />
+            <SolidColorBrush x:Key="BorderBrush2" Color="{StaticResource BorderColor}" />
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+            <SolidColorBrush x:Key="GoldBrush" Color="{StaticResource GoldColor}" />
+
+            <LinearGradientBrush x:Key="BannerGradientBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{StaticResource AccentTealColor}" Offset="0" />
+                <GradientStop Color="{StaticResource PrimaryGreenDarkColor}" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
 
 </ResourceDictionary>

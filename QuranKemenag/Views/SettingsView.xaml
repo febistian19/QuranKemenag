@@ -13,25 +13,60 @@
 
             <TextBlock Text="Pengaturan Tampilan" FontSize="16" FontWeight="Bold" Margin="0,0,0,16" />
 
-            <!--<Border Style="{StaticResource CardBorder}" Margin="0,0,0,20">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE753;" FontSize="16" Foreground="{StaticResource PrimaryGreenBrush}" VerticalAlignment="Center" />
-                        <TextBlock Text="Data Al-Qur'an" FontWeight="Bold" FontSize="14" Margin="10,0,0,0" VerticalAlignment="Center" />
-                    </StackPanel>
-                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,8,0,14">
-                        Teks lengkap 114 surah sudah tersimpan di dalam aplikasi (offline), sehingga tidak perlu
-                        koneksi internet maupun proses sinkronisasi untuk membaca Al-Qur'an.
-                    </TextBlock>
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="8" Height="8" Fill="{StaticResource PrimaryGreenBrush}" VerticalAlignment="Center" />
-                        <TextBlock x:Name="TxtStatusData" Text="114 dari 114 surah siap dipakai secara offline"
-                                   FontSize="12.5" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>-->
 
-            <Grid Margin="0,0,0,20">
+
+
+
+
+
+
+
+
+
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="PILIHAN TEMA" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" Margin="0,0,0,10" />
+                    <Border Style="{StaticResource ThemePillGroup}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <RadioButton x:Name="RbTerang" Style="{StaticResource ThemePillRadio}" MinWidth="0" GroupName="Tema" Checked="RbTema_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE706;" FontSize="14" Margin="0,0,8,5" />
+                                    <TextBlock Text="Light" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton x:Name="RbGelap" Style="{StaticResource ThemePillRadio}" MinWidth="0" GroupName="Tema" Checked="RbTema_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE708;" FontSize="14" Margin="0,0,6,0" />
+                                    <TextBlock Text="Dark" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton x:Name="RbSistem" Style="{StaticResource ThemePillRadio}" MinWidth="0" GroupName="Tema" Checked="RbTema_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7F4;" FontSize="14" Margin="0,0,6,0" />
+                                    <TextBlock Text="System" />
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!--<Grid Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -39,25 +74,25 @@
 
                 <Border Style="{StaticResource CardBorder}" Margin="0,0,10,0">
                     <StackPanel>
-                        <TextBlock Text="PILIHAN TEMA" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10" />
+                        <TextBlock Text="PILIHAN TEMA" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" Margin="0,0,0,10" />
                         <Border Style="{StaticResource ThemePillGroup}">
                             <StackPanel Orientation="Horizontal">
                                 <RadioButton x:Name="RbTerang" Style="{StaticResource ThemePillRadio}" GroupName="Tema" Checked="RbTema_Checked">
                                     <StackPanel Orientation="Horizontal">
-                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE706;" FontSize="14" Margin="0,0,6,0" />
-                                        <TextBlock Text="Terang" />
+                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE706;" FontSize="14" Margin="0,0,8,5" />
+                                        <TextBlock Text="Light" />
                                     </StackPanel>
                                 </RadioButton>
                                 <RadioButton x:Name="RbGelap" Style="{StaticResource ThemePillRadio}" GroupName="Tema" Checked="RbTema_Checked">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE708;" FontSize="14" Margin="0,0,6,0" />
-                                        <TextBlock Text="Gelap" />
+                                        <TextBlock Text="Dark" />
                                     </StackPanel>
                                 </RadioButton>
                                 <RadioButton x:Name="RbSistem" Style="{StaticResource ThemePillRadio}" GroupName="Tema" Checked="RbTema_Checked">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE7F4;" FontSize="14" Margin="0,0,6,0" />
-                                        <TextBlock Text="Sistem" />
+                                        <TextBlock Text="System" />
                                     </StackPanel>
                                 </RadioButton>
                             </StackPanel>
@@ -65,76 +100,76 @@
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorder}" Margin="10,0,0,0">
+                --><!--<Border Grid.Column="1" Style="{StaticResource CardBorder}" Margin="10,0,0,0">
                     <StackPanel>
-                        <TextBlock Text="JENIS FONT MUSHAF" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10" />
+                        <TextBlock Text="JENIS FONT MUSHAF" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" Margin="0,0,0,10" />
                         <ComboBox x:Name="CmbFontMushaf" HorizontalAlignment="Stretch" SelectionChanged="CmbFontMushaf_SelectionChanged" />
                     </StackPanel>
-                </Border>
-            </Grid>
+                </Border>--><!--
+            </Grid>-->
 
-            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+            <!--<Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid>
-                        <TextBlock Text="UKURAN TEKS ARAB" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                        <TextBlock Text="UKURAN TEKS ARAB" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
                         <TextBlock x:Name="TxtUkuranArab" Text="32px" HorizontalAlignment="Right" FontSize="11" />
                     </Grid>
                     <Slider x:Name="SliderArab" Minimum="16" Maximum="48" Value="32" Margin="0,8" ValueChanged="SliderArab_ValueChanged" />
-                    <Border Background="{StaticResource BackgroundBrush}" Padding="16" CornerRadius="6">
+                    <Border Background="{ThemeResource BackgroundBrush}" Padding="16" CornerRadius="6">
                         <TextBlock x:Name="PreviewArab" Text="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" FontSize="32"
-                                   HorizontalAlignment="Center" Foreground="{StaticResource PrimaryGreenBrush}" />
+                                   HorizontalAlignment="Center" Foreground="{ThemeResource PrimaryGreenBrush}" />
                     </Border>
                 </StackPanel>
-            </Border>
+            </Border>-->
 
             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,24">
                 <StackPanel>
                     <Grid>
-                        <TextBlock Text="UKURAN TERJEMAHAN" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                        <TextBlock Text="UKURAN TERJEMAHAN" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
                         <TextBlock x:Name="TxtUkuranTerjemah" Text="16px" HorizontalAlignment="Right" FontSize="11" />
                     </Grid>
                     <Slider x:Name="SliderTerjemah" Minimum="10" Maximum="28" Value="16" Margin="0,8" ValueChanged="SliderTerjemah_ValueChanged" />
-                    <Border Background="{StaticResource BackgroundBrush}" Padding="16" CornerRadius="6">
+                    <Border Background="{ThemeResource BackgroundBrush}" Padding="16" CornerRadius="6">
                         <TextBlock x:Name="PreviewTerjemah" Text="Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang." FontSize="16" />
                     </Border>
                 </StackPanel>
             </Border>
 
-            <TextBlock Text="Bahasa Aplikasi" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
+            <TextBlock Text="Download Bahasa Terjemahan" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
             <Border Style="{StaticResource CardBorder}" Padding="0">
                 <StackPanel>
                     <RadioButton GroupName="Bahasa" IsChecked="True" Style="{StaticResource LanguageRowRadio}">
                         <StackPanel Orientation="Horizontal">
                             <Border Style="{StaticResource KodeBahasaBadge}">
-                                <TextBlock Text="ID" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock Text="ID" FontWeight="Bold" FontSize="11" Foreground="{ThemeResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                             <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="Indonesia" FontWeight="SemiBold" />
-                                <TextBlock Text="Default sistem" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                                <TextBlock Text="Indonesia" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                                <TextBlock Text="Default sistem" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
                             </StackPanel>
                         </StackPanel>
                     </RadioButton>
-                    <Border BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,1,0,0" />
+                    <Border BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="0,1,0,0" />
                     <RadioButton GroupName="Bahasa" Style="{StaticResource LanguageRowRadio}">
                         <StackPanel Orientation="Horizontal">
                             <Border Style="{StaticResource KodeBahasaBadge}">
-                                <TextBlock Text="EN" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock Text="EN" FontWeight="Bold" FontSize="11" Foreground="{ThemeResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                             <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="Inggris" FontWeight="SemiBold" />
-                                <TextBlock Text="English (United States)" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                                <TextBlock Text="Inggris" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                                <TextBlock Text="English (United States)" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
                             </StackPanel>
                         </StackPanel>
                     </RadioButton>
-                    <Border BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,1,0,0" />
+                    <Border BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="0,1,0,0" />
                     <RadioButton GroupName="Bahasa" Style="{StaticResource LanguageRowRadio}">
                         <StackPanel Orientation="Horizontal">
                             <Border Style="{StaticResource KodeBahasaBadge}">
-                                <TextBlock Text="AR" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock Text="AR" FontWeight="Bold" FontSize="11" Foreground="{ThemeResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                             <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="Arab" FontWeight="SemiBold" />
-                                <TextBlock Text="العربية" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                                <TextBlock Text="Arab" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                                <TextBlock Text="العربية" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
                             </StackPanel>
                         </StackPanel>
                     </RadioButton>

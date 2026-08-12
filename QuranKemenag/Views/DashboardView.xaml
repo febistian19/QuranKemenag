@@ -8,7 +8,7 @@
         <StackPanel HorizontalAlignment="Stretch">
 
             <!-- Banner -->
-            <Border Background="{StaticResource BannerGradientBrush}" CornerRadius="14" Padding="28" Height="180">
+            <Border Background="{ThemeResource BannerGradientBrush}" CornerRadius="14" Padding="28" Height="180">
                 <StackPanel VerticalAlignment="Center" MaxWidth="900" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <TextBlock Text="Ekspor Ayat ke Layout Profesional" Foreground="White" FontSize="18" FontWeight="Bold" />
                     <TextBlock Text="Transformasi teks suci ke dalam tata letak profesional dengan presisi tinggi. Sesuaikan tipografi dan ekspor dengan mudah ke format Word atau PowerPoint untuk kebutuhan publikasi Anda."
@@ -21,7 +21,7 @@
             <!-- Bookmark terbaru -->
             <Border Style="{StaticResource CardBorder}" Padding="0" Margin="0,24,0,0">
                 <StackPanel>
-                    <Border Padding="16,14" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1"
+                    <Border Padding="16,14" BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="0,0,0,1"
                 Background="Transparent" Tapped="ToggleBookmark_Tapped">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -30,14 +30,14 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
                                 <Polygon Points="1,0 11,0 11,15 6,11 1,15"
-                     Fill="{StaticResource PrimaryGreenDarkBrush}"
+                     Fill="{ThemeResource PrimaryGreenDarkBrush}"
                      Width="11" Height="15" Stretch="Uniform"
                      VerticalAlignment="Center" />
-                                <TextBlock Text="Bookmark Terbaru" FontWeight="SemiBold" Margin="8,0,0,0" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="Bookmark Terbaru" FontWeight="SemiBold" Margin="8,0,0,0" Foreground="{ThemeResource TextPrimaryBrush}" />
                             </StackPanel>
                             <FontIcon x:Name="IconToggleBookmark" Grid.Column="1"
                           FontFamily="Segoe Fluent Icons" Glyph="&#xE70D;" FontSize="13"
-                          Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                          Foreground="{ThemeResource TextSecondaryBrush}" VerticalAlignment="Center" />
                         </Grid>
                     </Border>
 
@@ -45,7 +45,7 @@
                         <ItemsControl x:Name="BookmarkList">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="local:BookmarkTampil">
-                                    <Border BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="16,14"
+                                    <Border BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="16,14"
                                 Tapped="BookmarkItem_Tapped" Tag="{x:Bind}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -54,21 +54,21 @@
                                                 <ColumnDefinition Width="20" />
                                             </Grid.ColumnDefinitions>
                                             <Border Grid.Column="0" Style="{StaticResource NomorBadge}" VerticalAlignment="Top">
-                                                <TextBlock Text="{x:Bind NomorSurah, Converter={StaticResource IntKeAngkaArab}}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" />
+                                                <TextBlock Text="{x:Bind NomorSurah, Converter={StaticResource IntKeAngkaArab}}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource GoldBrush}" FontWeight="SemiBold" />
                                             </Border>
                                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                                <TextBlock Text="{x:Bind NamaSurah}" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}" />
-                                                <TextBlock Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"
+                                                <TextBlock Text="{x:Bind NamaSurah}" FontWeight="SemiBold" FontSize="13" Foreground="{ThemeResource TextPrimaryBrush}" />
+                                                <TextBlock Foreground="{ThemeResource TextSecondaryBrush}" FontSize="12"
                                                Text="{x:Bind TeksAyat}" />
                                             </StackPanel>
-                                            <TextBlock Grid.Column="2" Text="›" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="2" Text="›" FontSize="16" Foreground="{ThemeResource TextSecondaryBrush}" VerticalAlignment="Center" />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <Button Content="Lihat Semua Bookmark" Background="#DADDE0" BorderThickness="0"
+                        <Button Content="Lihat Semua Bookmark" Background="{ThemeResource CardBrush}" BorderThickness="0"
                     Padding="0,12" HorizontalAlignment="Stretch" Click="LihatSemuaBookmark_Click" />
                     </StackPanel>
                 </StackPanel>

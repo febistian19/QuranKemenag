@@ -22,6 +22,7 @@ namespace QuranKemenag
         private void NavSurah_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
+            _muatUlangHalamanSaatIni = () => NavSurah_Checked(sender, e);
             HeaderTitle.Text = "Surah";
             MainContent.Content = new SurahListView(this);
         }
@@ -29,6 +30,7 @@ namespace QuranKemenag
         private void NavJuz_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
+            _muatUlangHalamanSaatIni = () => NavJuz_Checked(sender, e);
             HeaderTitle.Text = "Juz";
             MainContent.Content = new JuzListView(this);
         }
@@ -36,6 +38,7 @@ namespace QuranKemenag
         private void NavSettings_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
+            _muatUlangHalamanSaatIni = () => NavSettings_Checked(sender, e);
             HeaderTitle.Text = "Pengaturan Tampilan";
             MainContent.Content = new SettingsView(this);
         }
@@ -43,12 +46,14 @@ namespace QuranKemenag
         private void NavAbout_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContent == null) return;
+            _muatUlangHalamanSaatIni = () => NavAbout_Checked(sender, e);
             HeaderTitle.Text = "Tentang Aplikasi";
             MainContent.Content = new AboutView();
         }
 
         public void BukaDashboard()
         {
+            _muatUlangHalamanSaatIni = BukaDashboard;
             MainContent.Content = new DashboardView(this);
             HeaderTitle.Text = "Dashboard";
             if (NavDashboard != null) NavDashboard.IsChecked = true;
@@ -105,12 +110,18 @@ namespace QuranKemenag
             BukaDashboard();
         }
 
+        private Action? _muatUlangHalamanSaatIni;
+
         public void TerapkanTema(ElementTheme tema)
         {
             if (Content is FrameworkElement root)
             {
                 root.RequestedTheme = tema;
             }
+
+            // StaticResource cuma di-resolve sekali pas elemen dibuat, jadi halaman yang lagi
+            // kebuka (mis. SettingsView sendiri) tidak otomatis ganti warna kecuali di-buat ulang.
+            _muatUlangHalamanSaatIni?.Invoke();
         }
 
         public ElementTheme TemaSaatIni => (Content as FrameworkElement)?.RequestedTheme ?? ElementTheme.Default;

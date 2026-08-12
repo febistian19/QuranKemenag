@@ -3,7 +3,7 @@
 
     <!-- ===================== TOMBOL UTAMA (hijau) ===================== -->
     <Style x:Key="PrimaryButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource PrimaryGreenBrush}" />
+        <Setter Property="Background" Value="{ThemeResource PrimaryGreenBrush}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding" Value="18,9" />
         <Setter Property="BorderThickness" Value="0" />
@@ -51,8 +51,8 @@
 
     <!-- ===================== KARTU (surah, juz, bookmark) ===================== -->
     <Style x:Key="CardBorder" TargetType="Border">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+        <Setter Property="Background" Value="{ThemeResource CardBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush2}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="Padding" Value="14" />
@@ -60,10 +60,11 @@
 
     <!-- Tombol sekunder (abu-abu netral) -->
     <Style x:Key="SecondaryButton" TargetType="Button">
-        <Setter Property="Background" Value="#EEF0F1" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="Background" Value="{ThemeResource CardBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
         <Setter Property="Padding" Value="14,9" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush2}" />
         <Setter Property="FontSize" Value="12.5" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Template">
@@ -75,18 +76,19 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="Bd.Background" Value="#E0E3E5" />
+                                        <Setter Target="Bd.Background" Value="{ThemeResource BorderBrush2}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="Bd.Background" Value="#D2D6D9" />
+                                        <Setter Target="Bd.Background" Value="{ThemeResource BorderBrush2}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter x:Name="Isi" Content="{TemplateBinding Content}"
                                               HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -114,7 +116,8 @@
     <Style x:Key="ToggleTabButton" TargetType="RadioButton">
         <Setter Property="Padding" Value="16,7" />
         <Setter Property="FontSize" Value="12.5" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Template">
@@ -131,7 +134,7 @@
                             <VisualStateGroup x:Name="CheckStates">
                                 <VisualState x:Name="Checked">
                                     <VisualState.Setters>
-                                        <Setter Target="Bd.Background" Value="{StaticResource PrimaryGreenBrush}" />
+                                        <Setter Target="Bd.Background" Value="{ThemeResource PrimaryGreenBrush}" />
                                         <Setter Target="Isi.Foreground" Value="White" />
                                         <Setter Target="Isi.FontWeight" Value="SemiBold" />
                                     </VisualState.Setters>
@@ -153,7 +156,9 @@
 
     <!-- Kontainer toggle group (bungkus 2 ToggleTabButton) -->
     <Style x:Key="ToggleTabGroup" TargetType="Border">
-        <Setter Property="Background" Value="#EEF0F1" />
+        <Setter Property="Background" Value="{ThemeResource BackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush2}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="9" />
         <Setter Property="Padding" Value="3" />
     </Style>
@@ -165,8 +170,8 @@
     <!-- ===================== TEXTBOX (pencarian, dsb) ===================== -->
     <Style x:Key="RoundedTextBox" TargetType="TextBox">
         <Setter Property="Padding" Value="12,9" />
-        <Setter Property="Background" Value="White" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+        <Setter Property="Background" Value="{ThemeResource CardBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush2}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="CornerRadius" Value="8" />
@@ -186,7 +191,7 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="Bd.Background" Value="#F5F6F7" />
+                                        <Setter Target="Bd.Background" Value="{ThemeResource BackgroundBrush}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed" />
@@ -195,8 +200,8 @@
                             <VisualStateGroup x:Name="CheckStates">
                                 <VisualState x:Name="Checked">
                                     <VisualState.Setters>
-                                        <Setter Target="Lingkaran.Background" Value="{StaticResource PrimaryGreenBrush}" />
-                                        <Setter Target="Lingkaran.BorderBrush" Value="{StaticResource PrimaryGreenBrush}" />
+                                        <Setter Target="Lingkaran.Background" Value="{ThemeResource PrimaryGreenBrush}" />
+                                        <Setter Target="Lingkaran.BorderBrush" Value="{ThemeResource PrimaryGreenBrush}" />
                                         <Setter Target="Centang.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -213,7 +218,7 @@
                                 <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"
                                                   Content="{TemplateBinding Content}" />
                                 <Border x:Name="Lingkaran" Grid.Column="1" Width="20" Height="20" CornerRadius="10"
-                                        BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1.5" VerticalAlignment="Center">
+                                        BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="1.5" VerticalAlignment="Center">
                                     <FontIcon x:Name="Centang" FontFamily="Segoe Fluent Icons" Glyph="&#xE73E;" FontSize="11"
                                               Foreground="White" Visibility="Collapsed"
                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -231,7 +236,7 @@
         <Setter Property="Width" Value="32" />
         <Setter Property="Height" Value="32" />
         <Setter Property="CornerRadius" Value="16" />
-        <Setter Property="Background" Value="#E7F4EF" />
+        <Setter Property="Background" Value="{ThemeResource BackgroundBrush}" />
     </Style>
 
     <!-- Kartu interaktif (dipakai untuk kartu ekspor Word/PowerPoint) -->
@@ -246,7 +251,7 @@
         <Setter Property="Margin" Value="12,3" />
         <Setter Property="Padding" Value="12,0" />
         <Setter Property="FontSize" Value="13.5" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Template">
@@ -258,7 +263,7 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="Bd.Background" Value="#F0F2F3" />
+                                        <Setter Target="Bd.Background" Value="{ThemeResource BackgroundBrush}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed" />
@@ -267,8 +272,8 @@
                             <VisualStateGroup x:Name="CheckStates">
                                 <VisualState x:Name="Checked">
                                     <VisualState.Setters>
-                                        <Setter Target="Bd.Background" Value="#E7F4EF" />
-                                        <Setter Target="Isi.Foreground" Value="{StaticResource PrimaryGreenBrush}" />
+                                        <Setter Target="Bd.Background" Value="{ThemeResource BackgroundBrush}" />
+                                        <Setter Target="Isi.Foreground" Value="{ThemeResource PrimaryGreenBrush}" />
                                         <Setter Target="Isi.FontWeight" Value="SemiBold" />
                                         <Setter Target="AksenAktif.Opacity" Value="1" />
                                     </VisualState.Setters>
@@ -278,7 +283,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Border x:Name="Bd" CornerRadius="8" Background="Transparent" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bd" CornerRadius="0,8,8,0" Background="Transparent" Padding="{TemplateBinding Padding}">
                             <ContentPresenter x:Name="Isi" VerticalAlignment="Center"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Content="{TemplateBinding Content}"
@@ -287,7 +292,7 @@
 
                         <!-- Aksen garis hijau di kiri untuk menu yang aktif -->
                         <Rectangle x:Name="AksenAktif" Width="3" HorizontalAlignment="Left"
-                               Fill="{StaticResource PrimaryGreenBrush}" RadiusX="2" RadiusY="2"
+                               Fill="{ThemeResource PrimaryGreenBrush}" RadiusX="2" RadiusY="2"
                                Opacity="0" Margin="0,7,0,7" />
                     </Grid>
                 </ControlTemplate>
@@ -297,7 +302,7 @@
 
     <!-- Label kategori sidebar (mis. AL-QUR'AN, PENGATURAN) -->
     <Style x:Key="NavGroupLabel" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}" />
         <Setter Property="FontSize" Value="10.5" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Margin" Value="20,20,0,6" />

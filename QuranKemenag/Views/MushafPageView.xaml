@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:QuranKemenag.Views">
 
-    <Grid Background="{StaticResource BackgroundBrush}">
+    <Grid Background="{ThemeResource BackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -50,21 +50,21 @@
         </Viewbox>
 
         <!-- ===== Navigasi halaman: ◀ [nomor] ▶ ===== -->
-        <Border Grid.Row="1" Background="#FFFCEA" BorderBrush="{StaticResource GoldBrush}" BorderThickness="1.5"
+        <Border Grid.Row="1" Background="#FFFCEA" BorderBrush="{ThemeResource GoldBrush}" BorderThickness="1.5"
                 CornerRadius="18" Padding="4" HorizontalAlignment="Center" Margin="0,4,0,16">
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="BtnHalSebelumnya" Width="36" Height="36" Padding="0" Margin="2"
                         Background="Transparent" BorderThickness="0" CornerRadius="14"
                         Click="BtnSebelumnya_Click" ToolTipService.ToolTip="Halaman sebelumnya">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="14" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="14" Foreground="{ThemeResource PrimaryGreenDarkBrush}" />
                 </Button>
                 <TextBlock x:Name="TxtNomorHalaman" Text="1" FontWeight="Bold" FontSize="14"
-                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextPrimaryBrush}" VerticalAlignment="Center"
                            Width="44" TextAlignment="Center" />
                 <Button x:Name="BtnHalSelanjutnya" Width="36" Height="36" Padding="0" Margin="2"
                         Background="Transparent" BorderThickness="0" CornerRadius="14"
                         Click="BtnSelanjutnya_Click" ToolTipService.ToolTip="Halaman berikutnya">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76C;" FontSize="14" Foreground="{StaticResource PrimaryGreenDarkBrush}" />
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76C;" FontSize="14" Foreground="{ThemeResource PrimaryGreenDarkBrush}" />
                 </Button>
             </StackPanel>
         </Border>

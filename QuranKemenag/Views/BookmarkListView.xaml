@@ -14,7 +14,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="24,14">
+        <Border Grid.Row="0" Background="{ThemeResource CardBrush}" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1" Padding="24,14">
             <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource SecondaryButton}" Padding="10,8" Margin="0,0,14,0" Click="Kembali_Click">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72B;" FontSize="15" />

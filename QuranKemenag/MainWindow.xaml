@@ -11,14 +11,15 @@
 
 
 
-    <Grid RequestedTheme="Light" Background="{StaticResource BackgroundBrush}">
+    <!--<Grid Background="{ThemeResource BackgroundBrush}">-->    <!-- untuk ke thema default komputer -->
+    <Grid RequestedTheme="Light" Background="{ThemeResource BackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="ColSidebar" Width="240" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- ================= SIDEBAR ================= -->
-        <Border Grid.Column="0" Background="{StaticResource SidebarBrush}">
+        <Border Grid.Column="0" Background="{ThemeResource SidebarBrush}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="64" />
@@ -29,8 +30,8 @@
                 <!-- Logo & judul aplikasi -->
                 <Border x:Name="BorderLogoHeader" Grid.Row="0"
                     Height="64"
-                    Background="{StaticResource SidebarBrush}"
-                    BorderBrush="{StaticResource BorderBrush2}"
+                    Background="{ThemeResource SidebarBrush}"
+                    BorderBrush="{ThemeResource BorderBrush2}"
                     BorderThickness="0,0,1,0"
                     Padding="16,0">
 
@@ -53,13 +54,13 @@
                     VerticalAlignment="Center">
 
                             <TextBlock Text="Qur'an Kemenag"
-                        FontSize="15"
-                        FontWeight="SemiBold"
-                        Foreground="{StaticResource TextPrimaryBrush}"/>
+                            FontSize="15"
+                            FontWeight="SemiBold"
+                            Foreground="{ThemeResource TextPrimaryBrush}"/>
 
                             <TextBlock Text="Windows"
-                        FontSize="11"
-                        Foreground="{StaticResource TextSecondaryBrush}"/>
+                            FontSize="11"
+                            Foreground="{ThemeResource TextSecondaryBrush}"/>
 
                         </StackPanel>
 
@@ -124,20 +125,20 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1">
+            <Border Grid.Row="0" Background="{ThemeResource CardBrush}" BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="0,0,0,0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
                     <Button x:Name="BtnToggleSidebar" 
                             Padding="7" Margin="0,0,14,0"
                             Background="Transparent"
-                            BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1"
+                            BorderBrush="{ThemeResource BorderBrush2}" BorderThickness="1"
                             CornerRadius="6"
                             Click="BtnToggleSidebar_Click"
                             ToolTipService.ToolTip="Sembunyikan/tampilkan menu">
                         <FontIcon x:Name="IkonToggleSidebar" FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" FontSize="14" />
                     </Button>
                     <TextBlock x:Name="HeaderTitle" Text="Dashboard"
-                               FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center"
-                               Foreground="{StaticResource TextPrimaryBrush}" />
+                       FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center"
+                       Foreground="{ThemeResource TextPrimaryBrush}" />
                 </StackPanel>
             </Border>
 

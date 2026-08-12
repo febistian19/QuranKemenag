@@ -52,7 +52,7 @@
                                 </Border>
                                 <StackPanel Margin="10,0,0,0">
                                     <TextBlock Text="{Binding NomorTampil}" FontWeight="SemiBold" FontSize="13" />
-                                    <TextBlock Text="{Binding Rentang}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" TextWrapping="Wrap" MaxWidth="260" />
+                                    <TextBlock Text="{Binding Rentang}" Foreground="{StaticResource TextSecondaryBrush }" FontSize="11" TextWrapping="Wrap" MaxWidth="260" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>

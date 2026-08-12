@@ -11,7 +11,7 @@
     <ScrollViewer Padding="30" VerticalScrollBarVisibility="Auto">
         <Border Style="{StaticResource CardBorder}" MaxWidth="700" HorizontalAlignment="Left" Padding="0">
             <StackPanel>
-                <Border Background="{StaticResource BackgroundBrush}" Padding="16,12" CornerRadius="10,10,0,0">
+                <Border Background="{StaticResource TextPrimaryBrush}" Padding="16,12" CornerRadius="10,10,0,0">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text="Tentang Aplikasi" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
@@ -20,17 +20,17 @@
 
                 <StackPanel Margin="40,30" HorizontalAlignment="Center">
                     <Image Source="/Resources/Images/logo-kemenag.png" Width="80" Height="80" Stretch="Uniform" HorizontalAlignment="Center" />
-                    <TextBlock Text="Qur'an Kemenag Versi Dekstop" FontSize="20" FontWeight="Bold"
+                    <TextBlock Text="Qur'an Kemenag Windows" FontSize="20" FontWeight="Bold"
                                HorizontalAlignment="Center" Margin="0,16,0,2" />
                     <TextBlock Text="VERSI 1.1 (STABLE BUILD)" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" Margin="0,0,0,20" />
 
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,14" Foreground="{StaticResource TextPrimaryBrush}">
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,14" Foreground="{StaticResource TextSecondaryBrush}">
                         Qur'an Kemenag Versi Desktop merupakan aplikasi yang dikembangkan sebagai sarana untuk memudahkan
                         masyarakat membaca, memahami, dan mengkaji Al-Qur'an melalui perangkat desktop.
                     </TextBlock>
 
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,14" Foreground="{StaticResource TextPrimaryBrush}">
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,14" Foreground="{StaticResource TextSecondaryBrush}">
                         Aplikasi ini menghadirkan Mushaf Standar Indonesia, terjemahan, pencarian ayat
                         dan surah, bookmark, serta berbagai fitur pendukung dengan dukungan mode luring.
                     </TextBlock>
