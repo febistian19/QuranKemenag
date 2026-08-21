@@ -132,7 +132,8 @@ namespace QuranKemenag.Data.Database
                     // kontrol Unicode RLO (\u202E) ... PDF (\u202C) supaya mesin render Windows
                     // memaksa urutan tampil kanan-ke-kiri yang benar (per kata & per baris saat wrap),
                     // walau kode PUA di font ini secara default tidak dikenali sebagai "huruf RTL".
-                    string teksRtl = "\u202E" + reader.GetString(1) + "\u202C";
+                    string teksUtsmani = HapusSimbolAkhirAyat(reader.GetString(1));
+                    string teksRtl = "\u202E" + teksUtsmani + "\u202C";
 
                     daftar.Add(new Ayat
                     {
@@ -178,6 +179,22 @@ namespace QuranKemenag.Data.Database
             }
 
             return daftar;
+        }
+
+        private static string HapusSimbolAkhirAyat(string teks)
+        {
+            teks = teks.TrimEnd();
+
+            if (teks.Length > 0)
+            {
+                char karakterTerakhir = teks[^1];
+                if (karakterTerakhir is >= '\uE000' and <= '\uF8FF')
+                {
+                    return teks[..^1];
+                }
+            }
+
+            return teks;
         }
 
         /// <summary>
