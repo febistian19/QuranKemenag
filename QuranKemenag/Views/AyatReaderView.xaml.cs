@@ -812,6 +812,8 @@ namespace QuranKemenag.Views
                 .Where(a => a.IsPembatasSurah || (a.NomorAyat >= dari && a.NomorAyat <= sampai))
                 .ToList();
 
+            string? kegagalanInterop = null;
+
             // Word sedang terbuka -> sisipkan langsung ke posisi kursor di dokumen aktif
             if (WordInteropService.WordSedangTerbuka())
             {
@@ -825,12 +827,12 @@ namespace QuranKemenag.Views
                         ukuranFontArab: _fontSize,
                         namaFontArab: EkstrakNamaFont(SelectedFontFamily)   
                     );
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    await TampilkanDialogAsync("Ekspor Word", $"Gagal menyisipkan ke Word:\n{ex.Message}");
+                    kegagalanInterop = ex.Message;
                 }
-                return;
             }
 
             var picker = new FileSavePicker();
@@ -858,7 +860,10 @@ namespace QuranKemenag.Views
             }
             catch (Exception ex)
             {
-                await TampilkanDialogAsync("Ekspor Word", $"Gagal mengekspor ke Word:\n{ex.Message}");
+                var detailInterop = string.IsNullOrWhiteSpace(kegagalanInterop)
+                    ? string.Empty
+                    : $"\n\nPenyisipan langsung ke Word gagal: {kegagalanInterop}";
+                await TampilkanDialogAsync("Ekspor Word", $"Gagal mengekspor ke Word:\n{ex.Message}{detailInterop}");
             }
         }
 
@@ -874,6 +879,8 @@ namespace QuranKemenag.Views
                 .Where(a => a.IsPembatasSurah || (a.NomorAyat >= dari && a.NomorAyat <= sampai))
                 .ToList();
 
+            string? kegagalanInterop = null;
+
             // PowerPoint sedang terbuka -> sisipkan slide baru ke presentasi aktif
             if (PowerPointInteropService.PowerPointSedangTerbuka())
             {
@@ -885,15 +892,15 @@ namespace QuranKemenag.Views
                         tampilkanTerjemah: sertakanTerjemah,
                         namaFontArab: EkstrakNamaFont(SelectedFontFamily)
                     );
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    await TampilkanDialogAsync("Ekspor PowerPoint", $"Gagal menyisipkan ke PowerPoint:\n{ex.Message}");
+                    kegagalanInterop = ex.Message;
                 }
-                return;
             }
 
-            // PowerPoint tidak terbuka -> proses seperti biasa (buat file .pptx baru)
+            // PowerPoint tidak tersedia atau penyisipan gagal -> buat file .pptx baru.
             var picker = new FileSavePicker();
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow));
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -918,7 +925,10 @@ namespace QuranKemenag.Views
             }
             catch (Exception ex)
             {
-                await TampilkanDialogAsync("Ekspor PowerPoint", $"Gagal mengekspor ke PowerPoint:\n{ex.Message}");
+                var detailInterop = string.IsNullOrWhiteSpace(kegagalanInterop)
+                    ? string.Empty
+                    : $"\n\nPenyisipan langsung ke PowerPoint gagal: {kegagalanInterop}";
+                await TampilkanDialogAsync("Ekspor PowerPoint", $"Gagal mengekspor ke PowerPoint:\n{ex.Message}{detailInterop}");
             }
         }
 

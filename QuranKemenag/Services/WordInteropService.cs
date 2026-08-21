@@ -38,10 +38,16 @@ namespace QuranKemenag.Services
             var app = DapatkanWordAktif();
             if (app != null)
             {
-                Marshal.ReleaseComObject(app);
+                LepaskanCom(app);
                 return true;
             }
             return false;
+        }
+
+        private static void LepaskanCom(object? value)
+        {
+            if (value is not null && Marshal.IsComObject(value))
+                Marshal.ReleaseComObject(value);
         }
 
         public static void SisipkanKeDokumenAktif(
@@ -51,11 +57,14 @@ namespace QuranKemenag.Services
     int ukuranFontArab,
     string namaFontArab = "LPMQ Isep Misbah")
         {
-            dynamic? app = DapatkanWordAktif() ?? throw new InvalidOperationException("Word tidak sedang terbuka.");
+            dynamic? app = DapatkanWordAktif() ?? throw new InvalidOperationException("Microsoft Word tidak sedang terbuka atau tidak dapat diakses.");
+            dynamic? sel = null;
 
             try
             {
-                dynamic sel = app.Selection;
+                sel = app.Selection;
+                if (sel is null)
+                    throw new InvalidOperationException("Posisi kursor Word tidak dapat diakses.");
 
                 sel.ParagraphFormat.SpaceBefore = 0;
                 sel.ParagraphFormat.SpaceAfter = 6;
@@ -102,7 +111,8 @@ namespace QuranKemenag.Services
             }
             finally
             {
-                Marshal.ReleaseComObject(app);
+                LepaskanCom(sel);
+                LepaskanCom(app);
             }
         }
     }

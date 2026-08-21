@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -30,17 +32,34 @@ namespace QuranKemenag.Services
             int ukuranFontArab = 28,
             string namaFontArab = "LPMQ Isep Misbah")
         {
-            using var dokumen = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document);
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("Lokasi file Word wajib diisi.", nameof(filePath));
 
-            var mainPart = dokumen.AddMainDocumentPart();
-            mainPart.Document = new Document();
-            var body = new Body();
+            if (daftarAyat is null)
+                throw new ArgumentNullException(nameof(daftarAyat));
 
-            body.Append(BuatParagrafJudul(judulSurah));
-            body.Append(BuatParagrafKosong());
+            if (ukuranFontArab <= 0)
+                throw new ArgumentOutOfRangeException(nameof(ukuranFontArab));
 
-            foreach (var ayat in daftarAyat)
+            var direktori = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(direktori))
+                Directory.CreateDirectory(direktori);
+
+            var fileSementara = filePath + ".tmp-" + Guid.NewGuid().ToString("N");
+
+            try
             {
+                using var dokumen = WordprocessingDocument.Create(fileSementara, WordprocessingDocumentType.Document);
+
+                var mainPart = dokumen.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                var body = new Body();
+
+                body.Append(BuatParagrafJudul(judulSurah));
+                body.Append(BuatParagrafKosong());
+
+                foreach (var ayat in daftarAyat)
+                {
                 // Entri "pembatas surah" (banner nama surah + Bismillah) tidak punya nomor ayat
                 // dan tidak punya teks ayat biasa — dirender terpisah, jangan lewat BuatParagrafArab.
                 if (ayat.IsPembatasSurah)
@@ -67,17 +86,26 @@ namespace QuranKemenag.Services
                     body.Append(BuatParagrafCatatanKaki(ayat.CatatanKaki));
 
                 body.Append(BuatParagrafKosong());
+                }
+
+                body.Append(BuatParagrafFooter());
+
+                body.Append(new SectionProperties(
+                    new PageSize { Width = 11906U, Height = 16838U },
+                    new PageMargin { Top = 1134, Bottom = 1134, Left = 1134, Right = 1134 }
+                ));
+
+                mainPart.Document.Append(body);
+                mainPart.Document.Save();
+                dokumen.Dispose();
+
+                File.Move(fileSementara, filePath, true);
             }
-
-            body.Append(BuatParagrafFooter());
-
-            body.Append(new SectionProperties(
-                new PageSize { Width = 11906U, Height = 16838U },
-                new PageMargin { Top = 1134, Bottom = 1134, Left = 1134, Right = 1134 }
-            ));
-
-            mainPart.Document.Append(body);
-            mainPart.Document.Save();
+            finally
+            {
+                if (File.Exists(fileSementara))
+                    File.Delete(fileSementara);
+            }
         }
 
         private static Paragraph BuatParagrafJudul(string judul)

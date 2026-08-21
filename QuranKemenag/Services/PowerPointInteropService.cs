@@ -40,10 +40,16 @@ namespace QuranKemenag.Services
             var app = DapatkanPowerPointAktif();
             if (app != null)
             {
-                Marshal.ReleaseComObject(app);
+                LepaskanCom(app);
                 return true;
             }
             return false;
+        }
+
+        private static void LepaskanCom(object? value)
+        {
+            if (value is not null && Marshal.IsComObject(value))
+                Marshal.ReleaseComObject(value);
         }
 
         private const int ppLayoutBlank = 12;
@@ -65,25 +71,41 @@ namespace QuranKemenag.Services
             // Slide Bismillah/banner surah dihilangkan total — hanya ayat yang disisipkan.
             var ayatSaja = daftarAyat.Where(a => !a.IsPembatasSurah).ToList();
 
-            dynamic? app = DapatkanPowerPointAktif() ?? throw new InvalidOperationException("PowerPoint tidak sedang terbuka.");
+            dynamic? app = DapatkanPowerPointAktif() ?? throw new InvalidOperationException("Microsoft PowerPoint tidak sedang terbuka atau tidak dapat diakses.");
+            dynamic? pres = null;
+            dynamic? slides = null;
 
             try
             {
-                dynamic pres = app.ActivePresentation;
-                dynamic slides = pres.Slides;
+                pres = app.ActivePresentation;
+                if (pres is null)
+                    throw new InvalidOperationException("Tidak ada presentasi PowerPoint yang sedang aktif.");
+
+                slides = pres.Slides;
+                if (slides is null)
+                    throw new InvalidOperationException("Daftar slide PowerPoint tidak dapat diakses.");
 
                 foreach (var ayat in ayatSaja)
                 {
                     int indexBaru = slides.Count + 1;
                     dynamic slide = slides.Add(indexBaru, ppLayoutBlank);
-                    TambahkanSlideAyat(slide, ayat, tampilkanLatin, tampilkanTerjemah, namaFontArab);
+                    try
+                    {
+                        TambahkanSlideAyat(slide, ayat, tampilkanLatin, tampilkanTerjemah, namaFontArab);
+                    }
+                    finally
+                    {
+                        LepaskanCom(slide);
+                    }
                 }
 
                 app.Activate();
             }
             finally
             {
-                Marshal.ReleaseComObject(app);
+                LepaskanCom(slides);
+                LepaskanCom(pres);
+                LepaskanCom(app);
             }
         }
 

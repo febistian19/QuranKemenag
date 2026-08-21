@@ -22,12 +22,25 @@ namespace QuranKemenag.Services
             bool tampilkanTerjemah = true,
             string namaFontArab = "LPMQ Isep Misbah")
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("Lokasi file PowerPoint wajib diisi.", nameof(filePath));
+
+            if (daftarAyat is null)
+                throw new ArgumentNullException(nameof(daftarAyat));
+
+            var direktori = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(direktori))
+                Directory.CreateDirectory(direktori);
+
             // Slide Bismillah/banner surah dihilangkan total dari ekspor — hanya ayat yang diekspor.
             var ayatList = daftarAyat.Where(a => !a.IsPembatasSurah).ToList();
 
-            if (File.Exists(filePath)) File.Delete(filePath);
+            var fileSementara = filePath + ".tmp-" + Guid.NewGuid().ToString("N");
 
-            using var zip = ZipFile.Open(filePath, ZipArchiveMode.Create);
+            try
+            {
+                using (var zip = ZipFile.Open(fileSementara, ZipArchiveMode.Create))
+                {
 
             TulisEntri(zip, "[Content_Types].xml", BuatContentTypes(ayatList.Count));
             TulisEntri(zip, "_rels/.rels", RelsDasar);
@@ -48,12 +61,21 @@ namespace QuranKemenag.Services
             TulisEntri(zip, "ppt/slides/_rels/slide1.xml.rels", SlideRels);
 
             // Slide per ayat
-            for (int i = 0; i < ayatList.Count; i++)
+                    for (int i = 0; i < ayatList.Count; i++)
+                    {
+                        int nomorSlide = i + 2;
+                        TulisEntri(zip, $"ppt/slides/slide{nomorSlide}.xml",
+                            BuatSlideAyat(ayatList[i], tampilkanLatin, tampilkanTerjemah, namaFontArab));
+                        TulisEntri(zip, $"ppt/slides/_rels/slide{nomorSlide}.xml.rels", SlideRels);
+                    }
+                }
+
+                File.Move(fileSementara, filePath, true);
+            }
+            finally
             {
-                int nomorSlide = i + 2;
-                TulisEntri(zip, $"ppt/slides/slide{nomorSlide}.xml",
-                    BuatSlideAyat(ayatList[i], tampilkanLatin, tampilkanTerjemah, namaFontArab));
-                TulisEntri(zip, $"ppt/slides/_rels/slide{nomorSlide}.xml.rels", SlideRels);
+                if (File.Exists(fileSementara))
+                    File.Delete(fileSementara);
             }
         }
 
