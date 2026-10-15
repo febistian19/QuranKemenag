@@ -30,7 +30,7 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
                                 <Polygon Points="1,0 11,0 11,15 6,11 1,15"
-                     Fill="{ThemeResource PrimaryGreenDarkBrush}"
+                     Fill="{ThemeResource TextPrimaryBrush}"
                      Width="11" Height="15" Stretch="Uniform"
                      VerticalAlignment="Center" />
                                 <TextBlock Text="Bookmark Terbaru" FontWeight="SemiBold" Margin="8,0,0,0" Foreground="{ThemeResource TextPrimaryBrush}" />

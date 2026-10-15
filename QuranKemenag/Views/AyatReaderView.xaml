@@ -110,6 +110,7 @@
 
                                     <!-- Banner bergambar iluminasi, 3 slot: Makkiyah/Madaniyah — Nama Surah — Jumlah Ayat -->
                                     <Grid Height="88">
+                                        <Rectangle Fill="{ThemeResource CardBrush}" />
                                         <Image Source="/Resources/Images/iluminasi-awalan-surah.png" Stretch="Fill" />
 
                                         <Grid>
@@ -123,19 +124,19 @@
 
                                             <!-- Kategori Makkiyah/Madaniyah, slot kiri -->
                                             <TextBlock Grid.Column="0" Text="{x:Bind JumlahAyatArabUntukPembatas}" FontFamily="Traditional Arabic" FontSize="25"
-                                                       Foreground="{ThemeResource PrimaryGreenDarkBrush}" FlowDirection="RightToLeft"
+                                                       Foreground="{ThemeResource TextPrimaryBrush}" FlowDirection="RightToLeft"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
 
                                             <!-- Nama surah Arab, slot tengah (lebih lebar) -->
                                             <TextBlock Grid.Column="2" Text="{x:Bind NamaSurahArabUntukPembatas}" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="35" FontWeight="Bold"
-                                                       Foreground="{ThemeResource PrimaryGreenDarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       Foreground="{ThemeResource TextPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                        FlowDirection="RightToLeft" />
 
                                             <!-- Jumlah ayat, slot kanan -->
                                             <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <!--<TextBlock Text="آياتها " FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" Foreground="{ThemeResource PrimaryGreenDarkBrush}" />-->
-                                                <TextBlock Text="{x:Bind TempatTurunUntukPembatas}" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" Foreground="{ThemeResource PrimaryGreenDarkBrush}" />
+                                                <TextBlock Text="{x:Bind TempatTurunUntukPembatas}" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah" FontSize="28" Foreground="{ThemeResource TextPrimaryBrush}" />
                                             </StackPanel>
                                         </Grid>
                                     </Grid>
@@ -145,7 +146,7 @@
                                                HorizontalAlignment="Center" Margin="0,6,0,0" />
                                     <!-- Bismillah, dilewati untuk Al-Fatihah & At-Taubah -->
                                     <TextBlock Visibility="{x:Bind VisibilitasBismillah}" Text="{x:Bind TeksBismillah}"
-                                        FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" FontSize="28" FontWeight="Bold"
+                                        FontFamily="{x:Bind FontBismillah, Mode=OneTime}" FontSize="28" FontWeight="Bold"
                                         Foreground="{ThemeResource TextPrimaryBrush}" FlowDirection="RightToLeft"
                                         HorizontalAlignment="Center" Margin="0,20,0,0" />
                                 </StackPanel>
@@ -170,7 +171,7 @@
                                     </Grid>
 
                                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind TeksArab}"
-                                           FontFamily="{x:Bind local:AyatReaderView.SelectedFontFamily, Mode=OneTime}" HorizontalAlignment="Stretch"
+                                           FontFamily="{x:Bind FontArab, Mode=OneTime}" HorizontalAlignment="Stretch"
                                            TextAlignment="Left"
                                            FlowDirection="RightToLeft" TextWrapping="Wrap" LineHeight="{x:Bind local:AyatReaderView.TinggiBarisGlobal, Mode=OneTime}"
                                            LineStackingStrategy="BlockLineHeight"
@@ -205,7 +206,7 @@
                                                 Tag="{x:Bind}" Click="BookmarkAyat_Click">
                                                 <Polygon Points="2,1 14,1 14,19 8,14 2,19"
                                                  Fill="{x:Bind WarnaBookmark, Mode=OneTime}"
-                                                 Stroke="{ThemeResource PrimaryGreenBrush}" StrokeThickness="1"
+                                                 Stroke="{ThemeResource TextPrimaryBrush}" StrokeThickness="1"
                                                  Width="14" Height="18" Stretch="Uniform" />
                                             </Button>
                                     </StackPanel>

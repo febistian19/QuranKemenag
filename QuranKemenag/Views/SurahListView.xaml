@@ -62,7 +62,7 @@
                                     <TextBlock Text="{Binding DisplayJudul}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" />
                                     <TextBlock Text="{Binding DisplayInfo}" Foreground="{ThemeResource TextSecondaryBrush}" FontSize="11" />
                                 </StackPanel>
-                                <TextBlock Grid.Column="2" Text="{Binding NamaArab}" Foreground="{ThemeResource PrimaryGreenBrush}" FontSize="16" VerticalAlignment="Top" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah"/>
+                                <TextBlock Grid.Column="2" Text="{Binding NamaArab}" Foreground="{ThemeResource TextPrimaryBrush}" FontSize="16" VerticalAlignment="Top" FontFamily="/Assets/Fonts/LPMQ IsepMisbah.ttf#LPMQ Isep Misbah"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

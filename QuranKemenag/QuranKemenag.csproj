@@ -14,7 +14,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\Fonts\KFGQPC Uthmanic Script HAFS Regular.otf" />
     <None Remove="Assets\Fonts\LPMQ IsepMisbah.ttf" />
     <None Remove="Assets\msi_simbol.db" />
     <None Remove="Assets\quran.db" />

@@ -130,9 +130,11 @@ namespace QuranKemenag.Views
                     continue;
                 }
 
-                ParagrafMushaf.Inlines.Add(new Run { Text = ayat.TeksArab + " " });
-                ParagrafMushaf.Inlines.Add(new InlineUIContainer { Child = BuatPenandaAyat(ayat.NomorAyat) });
-                ParagrafMushaf.Inlines.Add(new Run { Text = "  " });
+                var runAyat = new Run { Text = ayat.TeksArab + " " };
+                if (ayat.KodeFont > 0) runAyat.FontFamily = ayat.FontArab;
+                ParagrafMushaf.Inlines.Add(runAyat);
+                ParagrafMushaf.Inlines.Add(new InlineUIContainer { Child = BuatPenandaAyat(ayat.NomorAyat, konfig.UkuranFont) });
+                ParagrafMushaf.Inlines.Add(new Run { Text = " " });
             }
 
             TxtNomorHalaman.Text = (indeks + 1).ToString();
@@ -144,24 +146,30 @@ namespace QuranKemenag.Views
 
         private void BtnSelanjutnya_Click(object sender, RoutedEventArgs e) => TampilkanHalaman(_halamanSaatIni + 1);
 
-        private static Border BuatPenandaAyat(int nomorAyat)
+        private static Border BuatPenandaAyat(int nomorAyat, double ukuranFontHalaman)
         {
+            double diameter = Math.Clamp(ukuranFontHalaman * 1.45, 20, 34);
+            var warnaHijau = (Brush)Application.Current.Resources["PrimaryGreenDarkBrush"];
+
             var teks = new TextBlock
             {
                 Text = KeAngkaArab(nomorAyat),
-                FontSize = 22,
+                FontSize = Math.Max(ukuranFontHalaman * 0.62, 11),
                 FontFamily = new FontFamily("LPMQ ISEP MISBAH"),
-                Foreground = (Brush)Application.Current.Resources["PrimaryGreenDarkBrush"],
+                Foreground = warnaHijau,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
 
             return new Border
             {
-                Width = 44,
-                Height = 44,
-                CornerRadius = new CornerRadius(13),
-                Opacity = 0.9,
+                Width = diameter,
+                Height = diameter,
+                CornerRadius = new CornerRadius(diameter / 2),
+                BorderBrush = warnaHijau,
+                BorderThickness = new Thickness(1.2),
+                Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent),
+                Margin = new Thickness(2, 0, 2, 0),
                 Child = teks
             };
         }

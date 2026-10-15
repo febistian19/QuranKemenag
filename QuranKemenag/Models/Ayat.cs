@@ -1,6 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using QuranKemenag.Services;
+using QuranKemenag.Views;
 
 namespace QuranKemenag.Models
 {
@@ -13,6 +15,19 @@ namespace QuranKemenag.Models
         public string TeksLatin { get; set; } = string.Empty;
         public string Terjemah { get; set; } = string.Empty;
         public string? CatatanKaki { get; set; }
+
+        // Nomor font Utsmani (kolom kode_font di msi_simbol.db). 0 = bukan mode Utsmani (pakai font pilihan biasa).
+        public int KodeFont { get; set; } = 0;
+        public int KodeFontBismillah { get; set; } = 0;
+
+        // Font yang dipakai menampilkan teks Arab ayat ini: per-ayat kalau Utsmani, selain itu font pilihan pengguna.
+        public FontFamily FontArab => KodeFont > 0
+            ? FontUtsmaniService.Dapatkan(KodeFont)
+            : AyatReaderView.SelectedFontFamily;
+
+        public FontFamily FontBismillah => KodeFontBismillah > 0
+            ? FontUtsmaniService.Dapatkan(KodeFontBismillah)
+            : AyatReaderView.SelectedFontFamily;
 
         //WarnaBookmark
         public Brush WarnaBookmark { get; set; } = new SolidColorBrush(Color.FromArgb(255, 211, 211, 211)); // setara LightGray

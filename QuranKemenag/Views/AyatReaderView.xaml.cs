@@ -56,10 +56,16 @@ namespace QuranKemenag.Views
         // URI font Lpmq_Hafs_01 dipakai sebagai penanda "mode Utsmani" — begitu font ini dipilih,
         // sumber data ayat ikut dialihkan ke msi_simbol.db (bukan cuma ganti tampilan font biasa),
         // karena teksnya pakai encoding PUA yang cuma cocok dengan font ini.
-        private const string UriFontUtsmani = "ms-appx:///Assets/Fonts/Lpmq_Hafs_01-Regular.ttf#Lpmq_Hafs_01";
+
+                                                                //private const string UriFontUtsmani = "ms-appx:///Assets/Fonts/Lpmq_Hafs_01-Regular.ttf#Lpmq_Hafs_01";
+
+        private static string UriFontUtsmani(int nomorFont) =>
+            $"ms-appx:///Assets/Fonts/Lpmq_Hafs_{nomorFont:D2}-Regular.ttf#Lpmq_Hafs_{nomorFont:D2}";
 
         private string? _teksBismillahStandarCache;
         private string? _teksBismillahUtsmaniCache;
+
+        private int _kodeFontBismillah = 1;
 
         /// <summary>
         /// Bismillah selalu diambil dari ayat 1 Al-Fatihah, dari sumber data yang sesuai mode font
@@ -74,7 +80,12 @@ namespace QuranKemenag.Views
                 if (_teksBismillahUtsmaniCache != null) return _teksBismillahUtsmaniCache;
 
                 var ayatFatihah = await QuranDatabase.AmbilAyatSurahUtsmaniAsync(1);
-                _teksBismillahUtsmaniCache = ayatFatihah.FirstOrDefault(a => a.NomorAyat == 1)?.TeksArab ?? "";
+                //_teksBismillahUtsmaniCache = ayatFatihah.FirstOrDefault(a => a.NomorAyat == 1)?.TeksArab ?? "";
+
+                var ayatSatu = ayatFatihah.FirstOrDefault(a => a.NomorAyat == 1);
+                _teksBismillahUtsmaniCache = ayatSatu?.TeksArab ?? "";
+                _kodeFontBismillah = ayatSatu?.KodeFont > 0 ? ayatSatu.KodeFont : 1;
+
                 return _teksBismillahUtsmaniCache;
             }
             else
@@ -233,7 +244,7 @@ namespace QuranKemenag.Views
         }
 
         /// <summary>Membuat entri "pembatas" (banner nama surah + Bismillah) untuk 1 surah.</summary>
-        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang, int ayatMulaiTampil, string teksBismillah)
+        private static Ayat BuatPembatasSurah(Surah surah, string labelRentang, int ayatMulaiTampil, string teksBismillah, int kodeFontBismillah = 0)
         {
             // Bismillah cuma tampil kalau ayat yang ditampilkan benar-benar dimulai dari ayat 1
             // surah tersebut (bukan cuma karena kebetulan surah ini "muncul" di tengah rentang juz),
@@ -249,7 +260,8 @@ namespace QuranKemenag.Views
                 TempatTurunUntukPembatas = KeArabMakkiyahMadaniyah(surah.TempatTurun),
                 JumlahAyatArabUntukPembatas = $"آياتها {KeAngkaArabTeks(surah.JumlahAyat)}",
                 TampilkanBismillah = tampilkanBismillah,
-                TeksBismillah = teksBismillah
+                TeksBismillah = teksBismillah,
+                KodeFontBismillah = kodeFontBismillah
             };
         }
         private async Task InisialisasiAsync(int nomorSurahAwal, int ayatMulai)
@@ -276,7 +288,10 @@ namespace QuranKemenag.Views
                     // ignore invalid uri
                 }
 
-                bool modeUtsmaniBaru = uri == UriFontUtsmani;
+                                                     //bool modeUtsmaniBaru = uri == UriFontUtsmani;
+
+                bool modeUtsmaniBaru = Regex.IsMatch(uri, @"Lpmq_Hafs_\d+-Regular", RegexOptions.IgnoreCase);
+
                 TampilanNormalGlobal = !modeUtsmaniBaru;
                 TampilanUtsmaniGlobal = modeUtsmaniBaru;
 
@@ -371,18 +386,47 @@ namespace QuranKemenag.Views
                     var name = Path.GetFileName(fp);
                     var raw = Path.GetFileNameWithoutExtension(name);
 
-                    // Lpmq_Hafs_01 itu font simbol (PUA) khusus buat mode Utsmani, bukan font
-                    // "biasa" — namanya ditampilkan beda + Tag-nya dipatok ke UriFontUtsmani
-                    // supaya CmbJenisFont_SelectionChanged bisa mendeteksi & switch sumber data.
-                    bool iniFontUtsmani = raw.Equals("Lpmq_Hafs_01-Regular", StringComparison.OrdinalIgnoreCase);
+                                                            // Lpmq_Hafs_01 itu font simbol (PUA) khusus buat mode Utsmani, bukan font
+                                                            // "biasa" — namanya ditampilkan beda + Tag-nya dipatok ke UriFontUtsmani
+                                                            // supaya CmbJenisFont_SelectionChanged bisa mendeteksi & switch sumber data.
+                                                            //bool iniFontUtsmani = raw.Equals("Lpmq_Hafs_01-Regular", StringComparison.OrdinalIgnoreCase);
+
+                                                            //string displayName;
+                                                            //string uri;
+
+                                                            //if (iniFontUtsmani)
+                                                            //{
+                                                            //    displayName = "Utsmani (Simbol)";
+                                                            //    uri = UriFontUtsmani;
+                                                            //}
+                                                            //else
+                                                            //{
+                                                            //    displayName = raw.Replace('_', ' ');
+                                                            //    displayName = Regex.Replace(displayName, "[-_]?Regular$", "", RegexOptions.IgnoreCase).Trim();
+                                                            //    displayName = Regex.Replace(displayName, "([a-z])([A-Z])", "$1 $2");
+                                                            //    if (string.IsNullOrWhiteSpace(displayName)) displayName = raw;
+                                                            //    uri = $"ms-appx:///Assets/Fonts/{name}#{displayName}";
+                                                            //}
+
+                    // Lpmq_Hafs_NN itu keluarga font simbol (PUA) khusus mode Utsmani — dicocokkan lewat
+                    // pola nama (bukan 1 nama tetap), supaya Hafs_01 sampai Hafs_46 (atau berapa pun nanti)
+                    // otomatis kena, bukan cuma Hafs_01 doang.
+                    var match = Regex.Match(raw, @"^Lpmq_Hafs_(\d+)-Regular$", RegexOptions.IgnoreCase);
+                    bool iniFontUtsmani = match.Success;
+                    int nomorFontIni = iniFontUtsmani ? int.Parse(match.Groups[1].Value) : 0;
 
                     string displayName;
                     string uri;
 
                     if (iniFontUtsmani)
                     {
-                        displayName = "Utsmani (Simbol)";
-                        uri = UriFontUtsmani;
+                        //displayName = $"LPMQ Isep Misbah (handwritten {nomorFontIni:D2})";
+                        //uri = $"ms-appx:///Assets/Fonts/{name}#Lpmq_Hafs_{nomorFontIni:D2}";
+
+                        // Semua file Lpmq_Hafs_NN digabung jadi 1 pilihan di dropdown (dedup lewat "seen");
+                        // font yang dipakai tiap ayat ditentukan kolom kode_font di database, bukan pilihan dropdown.
+                        displayName = "LPMQ Isep Misbah (handwritten)";
+                        uri = FontUtsmaniService.BuatUri(1);
                     }
                     else
                     {
@@ -521,7 +565,8 @@ namespace QuranKemenag.Views
                     }
 
                     // end
-                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat", 1, teksBismillah);
+                    var pembatas = BuatPembatasSurah(_surahSaatIni, $"{_surahSaatIni.NamaLatin} ({_surahSaatIni.Arti}) • {_surahSaatIni.JumlahAyat} Ayat", 1, teksBismillah,
+                        _modeUtsmaniAktif ? _kodeFontBismillah : 0);
                     _ayatSaatIni.Insert(0, pembatas);
                 }
             }

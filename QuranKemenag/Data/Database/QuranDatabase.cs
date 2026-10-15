@@ -24,7 +24,7 @@ namespace QuranKemenag.Data.Database
         private static string ConnectionStringUtsmani => $"Data Source={DbPathUtsmani}";
 
         /// <summary>Nomor surah yang datanya sudah tersedia di database Utsmani (msi_simbol.db) — masih data percobaan.</summary>
-        public static readonly int[] SurahTersediaUtsmani = { 1, 2 };
+        public static int[] SurahTersediaUtsmani { get; private set; } = { 1, 2 };
 
         /// <summary>
         /// Dipanggil sekali saat aplikasi start. Menyalin database bawaan (Asset)
@@ -41,7 +41,30 @@ namespace QuranKemenag.Data.Database
             var assetFileUtsmani = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/msi_simbol.db"));
             await assetFileUtsmani.CopyAsync(targetFolder, "msi_simbol.db", NameCollisionOption.ReplaceExisting);
+
+            await MuatSurahTersediaUtsmaniAsync();
         }
+
+        /// <summary>Baca daftar surah yang sudah ada datanya di msi_simbol.db (otomatis ikut bertambah saat data ditambah).</summary>
+        private static async Task MuatSurahTersediaUtsmaniAsync()
+        {
+            try
+            {
+                using var koneksi = new SqliteConnection(ConnectionStringUtsmani);
+                await koneksi.OpenAsync();
+                var cmd = koneksi.CreateCommand();
+                cmd.CommandText = "SELECT DISTINCT surah FROM quran ORDER BY surah";
+                var hasil = new List<int>();
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync()) hasil.Add(reader.GetInt32(0));
+                if (hasil.Count > 0) SurahTersediaUtsmani = hasil.ToArray();
+            }
+            catch { }
+        }
+
+        
+
+
 
         public static async Task<List<Surah>> AmbilDaftarSurahAsync()
         {
@@ -122,7 +145,7 @@ namespace QuranKemenag.Data.Database
                 await koneksiUtsmani.OpenAsync();
 
                 var cmd = koneksiUtsmani.CreateCommand();
-                cmd.CommandText = "SELECT ayat, teks, juz FROM quran WHERE surah = $nomor ORDER BY ayat";
+                cmd.CommandText = "SELECT ayat, teks, juz, kode_font FROM quran WHERE surah = $nomor ORDER BY ayat";
                 cmd.Parameters.AddWithValue("$nomor", nomorSurah);
 
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -142,6 +165,9 @@ namespace QuranKemenag.Data.Database
                         TeksArab = teksRtl,
                         TeksLatin = "",
                         Juz = reader.GetInt32(2),
+
+                        // kode_font = nomor file Lpmq_Hafs_NN; kalau kosong dianggap font 1
+                        KodeFont = reader.IsDBNull(3) ? 1 : reader.GetInt32(3),
                     });
                 }
             }
